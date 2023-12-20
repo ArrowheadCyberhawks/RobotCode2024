@@ -4,14 +4,11 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.Constants.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import lib.frc706.cyberlib.commands.XboxDriveCommand;
 import lib.frc706.cyberlib.subsystems.*;
 
 /**
@@ -22,14 +19,25 @@ import lib.frc706.cyberlib.subsystems.*;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final SwerveSubsystem swerveSubsystem;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_driverController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    swerveSubsystem = new SwerveSubsystem(SwerveConstants.SWERVE_MODULE_TYPE,
+      SwerveConstants.wheelBase,
+      SwerveConstants.driveMotorPorts,
+      SwerveConstants.turnMotorPorts,
+      SwerveConstants.absoluteEncoderPorts,
+      SwerveConstants.absoluteEncoderOffsets,
+      SwerveConstants.driveMotorsInverted,
+      SwerveConstants.turnMotorsInverted,
+      SwerveConstants.absoluteEncodersInverted,
+      SwerveConstants.pathFollowerConfig);
+    m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    swerveSubsystem.setDefaultCommand(getTeleopCommand());
     // Configure the trigger bindings
     configureBindings();
   }
@@ -44,13 +52,20 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    m_driverController.a()
+      .onTrue(swerveSubsystem.runOnce(swerveSubsystem::zeroHeading)) // reset gyro to 0 degrees when A is pressed
+      .debounce(2) //check if A is pressed for 2 seconds
+      .onTrue(swerveSubsystem.runOnce(swerveSubsystem::recenter)); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
+  }
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+  public Command getTeleopCommand() {
+    return new XboxDriveCommand(m_driverController,
+      swerveSubsystem,
+      OperatorConstants.kDriverControllerDeadband,
+      OperatorConstants.kMaxVelTele,
+      OperatorConstants.kMaxAccelTele,
+      OperatorConstants.kMaxAngularVelTele,
+      OperatorConstants.kMaxAngularAccelTele);
   }
 
   /**
@@ -60,6 +75,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return null; // replace with autonomous command later
   }
 }
