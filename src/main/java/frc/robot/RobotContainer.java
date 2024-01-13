@@ -4,7 +4,13 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.SwerveConstants.*;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import frc.robot.Constants.*;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -18,6 +24,8 @@ import lib.frc706.cyberlib.subsystems.*;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  private final SendableChooser<Command> autoChooser;
+
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem;
 
@@ -26,20 +34,22 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerveSubsystem = new SwerveSubsystem(SwerveConstants.SWERVE_MODULE_TYPE,
-      SwerveConstants.wheelBase,
-      SwerveConstants.driveMotorPorts,
-      SwerveConstants.turnMotorPorts,
-      SwerveConstants.absoluteEncoderPorts,
-      SwerveConstants.absoluteEncoderOffsets,
-      SwerveConstants.driveMotorsInverted,
-      SwerveConstants.turnMotorsInverted,
-      SwerveConstants.absoluteEncodersInverted,
-      SwerveConstants.pathFollowerConfig);
+    swerveSubsystem = new SwerveSubsystem(SWERVE_MODULE_TYPE,
+      wheelBase,
+      driveMotorPorts,
+      turnMotorPorts,
+      absoluteEncoderPorts,
+      absoluteEncoderOffsets,
+      driveMotorsInverted,
+      turnMotorsInverted,
+      absoluteEncodersInverted,
+      pathFollowerConfig);
     m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
     swerveSubsystem.setDefaultCommand(getTeleopCommand());
     // Configure the trigger bindings
     configureBindings();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -75,6 +85,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null; // replace with autonomous command later
+    return autoChooser.getSelected();
   }
 }
