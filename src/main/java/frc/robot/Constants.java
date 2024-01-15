@@ -8,6 +8,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.util.Units;
+import lib.frc706.cyberlib.BrushlessSparkWithPID;
 import lib.frc706.cyberlib.subsystems.ModuleType;
 import lib.frc706.cyberlib.subsystems.ModuleTypes;
 
@@ -55,6 +56,8 @@ public final class Constants {
     public static final double kTiltD = 0.0;
     public static final double kTiltFF = 1.0;
     public static final double kTiltIZone = 0.0;
+    public static final double kTiltMaxVel = BrushlessSparkWithPID.NEO1650_MAXRPM;
+    public static final double kTiltMaxAccel = 5000;
     public static final double kTiltError = 1.0;
   }
 }
