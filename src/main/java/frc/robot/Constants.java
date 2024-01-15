@@ -43,4 +43,18 @@ public final class Constants {
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(SWERVE_MODULE_TYPE.getMaxVelocity(), driveBaseRadius, replanningConfig);
   }
+
+  public static class HandlerConstants {
+    public static final int kIntakeMotorPort = 9; // CHANGE FOR REAL ROBOT
+    public static final int kTiltMotorPort = 10; // CHANGE FOR REAL ROBOT
+    public static final int kShootMotor1Port = 11; // CHANGE FOR REAL ROBOT
+    public static final int kShootMotor2Port = 12; // CHANGE FOR REAL ROBOT
+
+    public static final double kTiltP = 1.0;
+    public static final double kTiltI = 0.0;
+    public static final double kTiltD = 0.0;
+    public static final double kTiltFF = 1.0;
+    public static final double kTiltIZone = 0.0;
+    public static final double kTiltError = 1.0;
+  }
 }
