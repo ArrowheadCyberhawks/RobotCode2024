@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import lib.frc706.cyberlib.BrushlessSparkWithPID;
 import static frc.robot.Constants.HandlerConstants.*;
 
+import java.util.function.Supplier;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class NoteHandler extends SubsystemBase {
@@ -56,5 +59,13 @@ public class NoteHandler extends SubsystemBase {
      */
     public void stopTilt() {
         tiltMotor.spark.stopMotor();
+    }
+
+    public Command runShooterCommand(Supplier<Double> speed) {
+        return this.run(() -> this.setShootMotor(speed.get())).finallyDo(()->setShootMotor(0));
+    }
+
+    public Command runIntakeCommand(double speed) {
+        return this.run(() -> this.setIntakeMotor(speed)).finallyDo(()->setIntakeMotor(0));
     }
 }
