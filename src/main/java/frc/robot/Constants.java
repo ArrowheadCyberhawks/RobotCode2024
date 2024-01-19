@@ -64,5 +64,7 @@ public final class Constants {
   public static class ElevatorConstants {
     public static final int kElevatorMotor1Port = 13;
     public static final int kElevatorMotor2Port = 14;
+    public static final double kMaxTrapezoidVelocity = 1000;
+    public static final double kMaxTrapezoidAccel = 1000;
   }
 }
