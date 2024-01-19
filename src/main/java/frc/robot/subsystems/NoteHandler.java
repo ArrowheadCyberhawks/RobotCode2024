@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import lib.frc706.cyberlib.BrushlessSparkWithPID;
 import static frc.robot.Constants.HandlerConstants.*;
 
+import java.util.function.Supplier;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class NoteHandler extends SubsystemBase {
@@ -16,6 +19,7 @@ public class NoteHandler extends SubsystemBase {
         shootMotor2 = new BrushlessSparkWithPID(kShootMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor2.spark.follow(shootMotor1.spark, true);
         tiltMotor = new BrushlessSparkWithPID(kTiltMotorPort, kTiltP, kTiltI, kTiltD, kTiltFF, kTiltIZone, kTiltMaxVel, kTiltMaxAccel, kTiltError);
+        setName("NoteHandler");
     }
 
     /**
@@ -23,7 +27,7 @@ public class NoteHandler extends SubsystemBase {
      * @param speed Speed of the intake motor in rotations per minute
      */
     public void setIntakeMotor(double speed) {
-        intakeMotor.setVel(speed);
+        intakeMotor.setVel(speed); 
     }
 
     /**
@@ -55,5 +59,13 @@ public class NoteHandler extends SubsystemBase {
      */
     public void stopTilt() {
         tiltMotor.spark.stopMotor();
+    }
+
+    public Command runShooterCommand(Supplier<Double> speed) {
+        return this.run(() -> this.setShootMotor(speed.get())).finallyDo(()->setShootMotor(0));
+    }
+
+    public Command runIntakeCommand(double speed) {
+        return this.run(() -> this.setIntakeMotor(speed)).finallyDo(()->setIntakeMotor(0));
     }
 }

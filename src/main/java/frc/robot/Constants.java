@@ -23,6 +23,9 @@ import lib.frc706.cyberlib.subsystems.ModuleTypes;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 2;
+    public static final int kManipulatorControllerPort = 3;
+    public static final int kManipulatorJoystickPort = 4;
+    public static final double kManipulatorJoystickDeadband = 0.05;
     public static final double kDriverControllerDeadband = 0.05;
     public static final double kMaxVelTele = SwerveConstants.SWERVE_MODULE_TYPE.getMaxVelocity();
     public static final double kMaxAccelTele = kMaxVelTele * 3; //idk what this should be
