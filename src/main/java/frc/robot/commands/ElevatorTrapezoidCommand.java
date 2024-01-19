@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
-import static frc.robot.Constants.ElevatorConstants.kMaxTrapezoidAccel;
-import static frc.robot.Constants.ElevatorConstants.kMaxTrapezoidVelocity;
+import static frc.robot.Constants.ElevatorConstants.kMaxElevatorTrapezoidAccel;
+import static frc.robot.Constants.ElevatorConstants.kMaxElevatorTrapezoidVelocity;
 
 import java.util.function.Supplier;
 
@@ -11,6 +11,6 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 public class ElevatorTrapezoidCommand extends TrapezoidProfileCommand {
     public ElevatorTrapezoidCommand(ElevatorSubsystem elevator, Supplier<TrapezoidProfile.State> targetState) {
-        super(new TrapezoidProfile(new TrapezoidProfile.Constraints(kMaxTrapezoidVelocity, kMaxTrapezoidAccel)), elevator::setState, targetState, elevator::getState, elevator);
+        super(new TrapezoidProfile(new TrapezoidProfile.Constraints(kMaxElevatorTrapezoidVelocity, kMaxElevatorTrapezoidAccel)), elevator::setElevatorState, targetState, elevator::getElevatorState, elevator);
     }
 }

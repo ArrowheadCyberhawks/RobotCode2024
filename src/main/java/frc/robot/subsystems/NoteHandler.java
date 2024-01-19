@@ -5,6 +5,7 @@ import static frc.robot.Constants.HandlerConstants.*;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -24,7 +25,7 @@ public class NoteHandler extends SubsystemBase {
 
     /**
      * Sets the speed of the intake motor.
-     * @param speed Speed of the intake motor in rotations per minute
+     * @param speed Speed of the intake motor in rotations per minute.
      */
     public void setIntakeMotor(double speed) {
         intakeMotor.setVel(speed); 
@@ -32,26 +33,51 @@ public class NoteHandler extends SubsystemBase {
 
     /**
      * Sets the speed of the shooter motors.
-     * @param speed Speed of the shooter motors in rotations per minute
+     * @param speed Speed of the shooter motors in rotations per minute.
      */
     public void setShootMotor(double speed) {
         shootMotor1.setVel(speed);
     }
 
     /**
-     * Sets the position of the tilt motor.
-     * @param position
+     * Sets the velocity of the tilt motor.
+     * @param velocity Velocity of the tilt motor in rotations per minute.
      */
-    public void setTiltPosition(double position) {
-        tiltMotor.setPos(position);
+    public void setTiltMotor(double velocity) {
+        tiltMotor.setVel(velocity);
     }
 
     /**
      * Gets the position of the tilt motor.
-     * @return Position of the tilt motor in rotations
+     * @return position of the tilt motor.
      */
     public double getTiltPosition() {
         return tiltMotor.getPos();
+    }
+
+    /**
+     * Gets the velocity of the tilt motor.
+     * @return velocity of the tilt motor.
+     */
+    public double getTiltVelocity() {
+        return tiltMotor.motorVel;
+    }
+
+    /**
+     * Sets the state of the tilt motor.
+     * @param setPoint the desired state of the tilt motor.
+     */
+    public void setTiltState(TrapezoidProfile.State setPoint) {
+        double velocity = setPoint.velocity;
+        setTiltMotor(velocity);
+    }
+
+    /**
+     * Gets the position of the tilt motor.
+     * @return Position of the tilt motor in a trapezoid profile.
+     */
+    public TrapezoidProfile.State getTiltState() {
+        return new TrapezoidProfile.State(getTiltPosition(), getTiltVelocity());
     }
 
     /**

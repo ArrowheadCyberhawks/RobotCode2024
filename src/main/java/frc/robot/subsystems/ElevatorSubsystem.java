@@ -54,7 +54,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * Sets the velocity of the motors using a trapezoid profile state.
      * @param setPoint the desired state of the elevator.
      */
-    public void setState(TrapezoidProfile.State setPoint) {
+    public void setElevatorState(TrapezoidProfile.State setPoint) {
         double velocity = setPoint.velocity;
         setElevatorMotor(velocity);
     }
@@ -63,7 +63,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * Gets the state of the elevator motors.
      * @return state of the elevator motors in a trapezoid profile.
      */
-    public TrapezoidProfile.State getState() {
+    public TrapezoidProfile.State getElevatorState() {
         return new TrapezoidProfile.State(getElevatorPosition(), getElevatorVelocity());
     }
 
