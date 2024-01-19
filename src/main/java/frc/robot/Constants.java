@@ -60,4 +60,9 @@ public final class Constants {
     public static final double kTiltMaxAccel = 5000;
     public static final double kTiltError = 1.0;
   }
+
+  public static class ElevatorConstants {
+    public static final int kElevatorMotor1Port = 13;
+    public static final int kElevatorMotor2Port = 14;
+  }
 }
