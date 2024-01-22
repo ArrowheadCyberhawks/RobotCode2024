@@ -54,6 +54,10 @@ public class NoteHandler extends SubsystemBase {
         return tiltMotor.getPos();
     }
 
+    public double getShootSpeed() {
+        return shootMotor1.spark.getEncoder().getVelocity();
+    }
+
     /**
      * Stops the tilt motor.
      */
