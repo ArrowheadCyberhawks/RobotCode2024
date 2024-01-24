@@ -11,10 +11,7 @@ import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import frc.robot.Constants.*;
-import frc.robot.commands.AutoShootCommand;
 import frc.robot.subsystems.NoteHandler;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.units.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -96,8 +93,8 @@ public class RobotContainer {
       .debounce(2) //check if A is pressed for 2 seconds
       .onTrue(swerveSubsystem.runOnce(swerveSubsystem::recenter)); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
     shootTrigger.whileTrue(noteHandler.runShooterCommand(shootSpeed));
-    intakeTrigger.whileTrue(noteHandler.runIntakeCommand(1.0));
-    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(-1.0));
+    intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->1.0));
+    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->1.0));
   }
 
   public Command getTeleopCommand() {

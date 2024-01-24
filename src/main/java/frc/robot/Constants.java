@@ -46,6 +46,11 @@ public final class Constants {
     public static final boolean[] absoluteEncodersInverted = {false, false, false, false}; //CHANGE THESE FOR REAL ROBOT!
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(SWERVE_MODULE_TYPE.getMaxVelocity(), driveBaseRadius, replanningConfig);
+
+    public static final double kMaxVelAuto = OperatorConstants.kMaxVelTele;
+    public static final double kMaxAccelAuto = OperatorConstants.kMaxAccelTele;
+    public static final double kMaxAngularVelAuto = OperatorConstants.kMaxAngularVelTele;
+    public static final double kMaxAngularAccelAuto = OperatorConstants.kMaxAngularAccelTele;
   }
 
   public static class HandlerConstants {
@@ -62,10 +67,16 @@ public final class Constants {
     public static final double kTiltMaxVel = BrushlessSparkWithPID.NEO1650_MAXRPM;
     public static final double kTiltMaxAccel = 5000;
     public static final double kTiltError = 1.0;
+
+    public static final double kMaxTiltTrapezoidVelocity = 1000;
+    public static final double kMaxTiltTrapezoidAccel = 1000;
   }
 
   public static class ElevatorConstants {
     public static final int kElevatorMotor1Port = 13;
     public static final int kElevatorMotor2Port = 14;
+
+    public static final double kMaxElevatorTrapezoidVelocity = 1000;
+    public static final double kMaxElevatorTrapezoidAccel = 1000;
   }
 }
