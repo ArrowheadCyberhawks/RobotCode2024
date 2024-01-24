@@ -46,6 +46,11 @@ public final class Constants {
     public static final boolean[] absoluteEncodersInverted = {false, false, false, false}; //CHANGE THESE FOR REAL ROBOT!
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(SWERVE_MODULE_TYPE.getMaxVelocity(), driveBaseRadius, replanningConfig);
+
+    public static final double kMaxVelAuto = OperatorConstants.kMaxVelTele;
+    public static final double kMaxAccelAuto = OperatorConstants.kMaxAccelTele;
+    public static final double kMaxAngularVelAuto = OperatorConstants.kMaxAngularVelTele;
+    public static final double kMaxAngularAccelAuto = OperatorConstants.kMaxAngularAccelTele;
   }
 
   public static class HandlerConstants {
