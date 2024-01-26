@@ -68,15 +68,22 @@ public final class Constants {
     public static final double kTiltMaxAccel = 5000;
     public static final double kTiltError = 1.0;
 
-    public static final double kMaxTiltTrapezoidVelocity = 1000;
-    public static final double kMaxTiltTrapezoidAccel = 1000;
+    public static final double kMaxTiltTrapezoidVelocity = 1000; // CHANGE FOR REAL ROBOT
+    public static final double kMaxTiltTrapezoidAccel = 1000; // CHANGE FOR REAL ROBOT
   }
 
   public static class ElevatorConstants {
-    public static final int kElevatorMotor1Port = 13;
-    public static final int kElevatorMotor2Port = 14;
+    public static final int kElevatorMotor1Port = 13; // CHANGE FOR REAL ROBOT
+    public static final int kElevatorMotor2Port = 14; // CHANGE FOR REAL ROBOT
 
-    public static final double kMaxElevatorTrapezoidVelocity = 1000;
-    public static final double kMaxElevatorTrapezoidAccel = 1000;
+    public static final double kMaxElevatorTrapezoidVelocity = 1000; // CHANGE FOR REAL ROBOT
+    public static final double kMaxElevatorTrapezoidAccel = 1000; // CHANGE FOR REAL ROBOT
+  }
+
+  public static class PositionalConstants {
+    public static final double kMaxElevatorPosition = 1000; // CHANGE FOR REAL ROBOT
+    public static final double kMinElevatorPosition = 0; // CHANGE FOR REAL ROBOT
+    public static final double kMaxNoteHandlerTilt = 1000; // CHANGE FOR REAL ROBOT
+    public static final double kMinNoteHandlerTilt = 0; // CHANGE FOR REAL ROBOT
   }
 }
