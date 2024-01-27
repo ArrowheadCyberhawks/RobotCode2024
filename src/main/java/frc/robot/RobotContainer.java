@@ -8,19 +8,22 @@ import static frc.robot.Constants.SwerveConstants.*;
 
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.databind.Module;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.*;
+import frc.robot.commands.AutoAmplifierCommand;
+import frc.robot.commands.AutoPositionCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.ElevatorTrapezoidCommand;
 import frc.robot.commands.NoteHandlerTrapezoidCommand;
 import frc.robot.commands.TurnInPlaceCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import lib.frc706.cyberlib.commands.XboxDriveCommand;
 import lib.frc706.cyberlib.subsystems.*;
+import static frc.robot.Constants.PositionalConstants.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -90,10 +94,15 @@ public class RobotContainer {
       
       ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
       NoteHandler noteHandler = new NoteHandler();
-      SwerveSubsystem swerveSubsystem = new SwerveSubsystem(null, null, null, null, 0, pathFollowerConfig, null);
+      Transform3d transform3dPhoton = new Transform3d();
+      PhotonCameraWrapper photonCameraWrapper = new PhotonCameraWrapper("cameraName", transform3dPhoton);
+      SwerveSubsystem swerveSubsystem = new SwerveSubsystem(null, null, null, null, 0, pathFollowerConfig, null);// TODO:add values
       // Register Named Commands
-      NamedCommands.registerCommand("ElevatorTrapezoidCommand", new ElevatorTrapezoidCommand(elevatorSubsystem, () -> new TrapezoidProfile.State(0, 0)));
-      NamedCommands.registerCommand("AutoShootCommand", new AutoShootCommand(swerveSubsystem, noteHandler, null));
+      NamedCommands.registerCommand("AutoShootCommand", new AutoShootCommand(swerveSubsystem, noteHandler, photonCameraWrapper));
+      NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
+      NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
+      NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
+
       // Do all other initialization
       configureBindings();
 
