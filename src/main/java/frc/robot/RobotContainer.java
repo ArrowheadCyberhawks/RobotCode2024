@@ -9,9 +9,18 @@ import static frc.robot.Constants.SwerveConstants.*;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.*;
+import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.ElevatorTrapezoidCommand;
+import frc.robot.commands.NoteHandlerTrapezoidCommand;
+import frc.robot.commands.TurnInPlaceCommand;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -76,6 +85,19 @@ public class RobotContainer {
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+      // Subsystem initialization
+      
+      ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+      NoteHandler noteHandler = new NoteHandler();
+      SwerveSubsystem swerveSubsystem = new SwerveSubsystem(null, null, null, null, 0, pathFollowerConfig, null);
+      // Register Named Commands
+      NamedCommands.registerCommand("ElevatorTrapezoidCommand", new ElevatorTrapezoidCommand(elevatorSubsystem, () -> new TrapezoidProfile.State(0, 0)));
+      NamedCommands.registerCommand("AutoShootCommand", new AutoShootCommand(swerveSubsystem, noteHandler, null));
+      // Do all other initialization
+      configureBindings();
+
+
   }
 
   /**
