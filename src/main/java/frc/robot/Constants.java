@@ -11,6 +11,7 @@ import edu.wpi.first.math.util.Units;
 // import lib.frc706.cyberlib.BrushlessSparkWithPID;
 // import lib.frc706.cyberlib.subsystems.ModuleType;
 // import lib.frc706.cyberlib.subsystems.ModuleTypes;
+import lib.frc706.cyberlib.BrushlessSparkWithPID;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -27,8 +28,8 @@ public final class Constants {
     public static final int kManipulatorJoystickPort = 4;
     public static final double kManipulatorJoystickDeadband = 0.05;
     public static final double kDriverControllerDeadband = 0.05;
-    // public static final double kMaxVelTele = SwerveConstants.SWERVE_MODULE_TYPE.getMaxVelocity();
-    // public static final double kMaxAccelTele = kMaxVelTele * 3; //idk what this should be
+    public static final double kMaxVelTele = Units.feetToMeters(15);
+    public static final double kMaxAccelTele = kMaxVelTele * 3; //idk what this should be
     public static final double kMaxAngularVelTele = 2 * 2 * Math.PI; //idk 2 radians per second whatever
     public static final double kMaxAngularAccelTele = kMaxAngularVelTele * 3;
   }
@@ -45,12 +46,13 @@ public final class Constants {
     public static final boolean[] turnMotorsInverted = {false, false, false, false}; //CHANGE THESE FOR REAL ROBOT!
     public static final boolean[] absoluteEncodersInverted = {false, false, false, false}; //CHANGE THESE FOR REAL ROBOT!
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
-    //public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(SWERVE_MODULE_TYPE.getMaxVelocity(), driveBaseRadius, replanningConfig);
-
-    // public static final double kMaxVelAuto = OperatorConstants.kMaxVelTele;
-    // public static final double kMaxAccelAuto = OperatorConstants.kMaxAccelTele;
+    
+    public static final double kMaxVelAuto = OperatorConstants.kMaxVelTele;
+    public static final double kMaxAccelAuto = OperatorConstants.kMaxAccelTele;
     public static final double kMaxAngularVelAuto = OperatorConstants.kMaxAngularVelTele;
     public static final double kMaxAngularAccelAuto = OperatorConstants.kMaxAngularAccelTele;
+    public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(kMaxVelAuto, driveBaseRadius, replanningConfig);
+
   }
 
   public static class HandlerConstants {
@@ -64,7 +66,7 @@ public final class Constants {
     public static final double kTiltD = 0.0;
     public static final double kTiltFF = 1.0;
     public static final double kTiltIZone = 0.0;
-    //public static final double kTiltMaxVel = BrushlessSparkWithPID.NEO1650_MAXRPM;
+    public static final double kTiltMaxVel = BrushlessSparkWithPID.NEO1650_MAXRPM;
     public static final double kTiltMaxAccel = 5000;
     public static final double kTiltError = 1.0;
 
