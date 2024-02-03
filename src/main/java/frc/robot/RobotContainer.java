@@ -25,9 +25,6 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.NoteHandler;
 import lib.frc706.cyberlib.commands.XboxDriveCommand;
 import lib.frc706.cyberlib.subsystems.SwerveSubsystem;
-// import frc.robot.subsystems.NoteHandler;
-// import lib.frc706.cyberlib.commands.XboxDriveCommand;
-// import lib.frc706.cyberlib.subsystems.SwerveSubsystem;
 import swervelib.SwerveDrive;
 
 /**
@@ -133,8 +130,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  //   // An example command will be run in autonomous
-  //   return autoChooser.getSelected();
-  // }
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+  }
 }
