@@ -5,18 +5,14 @@
 package frc.robot;
 
 import java.io.File;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,7 +21,6 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.NoteHandler;
 import lib.frc706.cyberlib.commands.XboxDriveCommand;
 import lib.frc706.cyberlib.subsystems.SwerveSubsystem;
-import swervelib.SwerveDrive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -39,8 +34,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem;
   private final NoteHandler noteHandler;
-
-  public SwerveDrive swerveDrive;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController;
@@ -73,6 +66,7 @@ public class RobotContainer {
     swerveSubsystem.setDefaultCommand(getTeleopCommand());
     // Configure the trigger bindings
     configureBindings();
+    
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
@@ -88,7 +82,7 @@ public class RobotContainer {
    */
   private void configureBindings() {
     driverController.a()
-      .onTrue(Commands.runOnce(() -> {swerveDrive.zeroGyro();System.out.println("zeroing");})) // reset gyro to 0 degrees when A is pressed
+      .onTrue(Commands.runOnce(() -> {swerveSubsystem.zeroHeading();System.out.println("zeroing");})) // reset gyro to 0 degrees when A is pressed
       .debounce(2) //check if A is pressed for 2 seconds
       .onTrue(swerveSubsystem.runOnce(swerveSubsystem::recenter)); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
     shootTrigger.whileTrue(noteHandler.runShooterCommand(shootSpeed));
@@ -97,6 +91,8 @@ public class RobotContainer {
   }
 
   public Command getTeleopCommand() {
+    swerveSubsystem.swerveDrive.setHeadingCorrection(false);
+    //return swerveSubsystem.simDriveCommand(driverController::getLeftX, driverController::getLeftX, driverController::getRightX);
     return new XboxDriveCommand(driverController,
       swerveSubsystem,
       OperatorConstants.kDriverControllerDeadband,
@@ -104,25 +100,6 @@ public class RobotContainer {
       OperatorConstants.kMaxAccelTele,
       OperatorConstants.kMaxAngularVelTele,
       OperatorConstants.kMaxAngularAccelTele);
-  }
-     /**
-   * Command to drive the robot using translative values and heading as a setpoint.
-   *
-   * @param translationX Translation in the X direction.
-   * @param translationY Translation in the Y direction.
-   * @param headingX     Heading X to calculate angle of the joystick.
-   * @param headingY     Heading Y to calculate angle of the joystick.
-   * @return Drive command.
-   */
-  public Command driveCommand(SwerveDrive driveSubsystem, DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier headingX, DoubleSupplier headingY)
-  {
-    return new RunCommand(() -> {
-      double xInput = Math.pow(MathUtil.applyDeadband(translationX.getAsDouble(), 0.1), 1) * (driverController.getRightTriggerAxis() + 0.15); // Smooth controll out
-      double yInput = Math.pow(MathUtil.applyDeadband(translationY.getAsDouble(), 0.1), 1) * (driverController.getRightTriggerAxis() + 0.15); // Smooth controll out
-      double turnInput = Math.pow(MathUtil.applyDeadband(headingX.getAsDouble(), 0.1), 3) * (driverController.getRightTriggerAxis() + 0.75);
-      // Make the robot move
-      driveSubsystem.driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(xInput, -yInput, turnInput + swerveDrive.getYaw().getRadians(), swerveDrive.getYaw().getRadians(), swerveDrive.getMaximumVelocity()));
-    });
   }
 
   /**

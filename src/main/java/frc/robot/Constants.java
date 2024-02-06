@@ -27,7 +27,7 @@ public final class Constants {
     public static final int kManipulatorControllerPort = 3;
     public static final int kManipulatorJoystickPort = 4;
     public static final double kManipulatorJoystickDeadband = 0.05;
-    public static final double kDriverControllerDeadband = 0.05;
+    public static final double kDriverControllerDeadband = 0.07;
     public static final double kMaxVelTele = Units.feetToMeters(15);
     public static final double kMaxAccelTele = kMaxVelTele * 3; //idk what this should be
     public static final double kMaxAngularVelTele = 2 * 2 * Math.PI; //idk 2 radians per second whatever
@@ -35,24 +35,15 @@ public final class Constants {
   }
 
   public static class SwerveConstants {
-    //public static final ModuleType SWERVE_MODULE_TYPE = ModuleTypes.MK4_L2;
     public static final double wheelBase = Units.inchesToMeters(29);
     public static final double driveBaseRadius = Math.sqrt(wheelBase * wheelBase * 2) / 2;
-    public static final int[] driveMotorPorts = {6, 1, 11, 8}; //CHANGE THESE FOR REAL ROBOT!
-    public static final int[] turnMotorPorts = {5, 2, 12, 7}; //CHANGE THESE FOR REAL ROBOT!
-    public static final int[] absoluteEncoderPorts = {0, 1, 2, 3}; //CHANGE THESE FOR REAL ROBOT!
-    public static final double[] absoluteEncoderOffsets = {1 - Math.PI, 0 - Math.PI, 0.94, 1.85 - Math.PI}; //CHANGE THESE FOR REAL ROBOT!
-    public static final boolean[] driveMotorsInverted = {false, false, false, false}; //CHANGE THESE FOR REAL ROBOT!
-    public static final boolean[] turnMotorsInverted = {false, false, false, false}; //CHANGE THESE FOR REAL ROBOT!
-    public static final boolean[] absoluteEncodersInverted = {false, false, false, false}; //CHANGE THESE FOR REAL ROBOT!
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
     
-    public static final double kMaxVelAuto = OperatorConstants.kMaxVelTele;
+    public static final double kMaxVelAuto = OperatorConstants.kMaxVelTele/5;
     public static final double kMaxAccelAuto = OperatorConstants.kMaxAccelTele;
     public static final double kMaxAngularVelAuto = OperatorConstants.kMaxAngularVelTele;
     public static final double kMaxAngularAccelAuto = OperatorConstants.kMaxAngularAccelTele;
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(kMaxVelAuto, driveBaseRadius, replanningConfig);
-
   }
 
   public static class HandlerConstants {
