@@ -31,7 +31,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
      * @param noteHandler The note handler subsystem to use
      * @param cameras The cameras to use
      */
-    public AutoShootCommand(SwerveSubsystem swerve, NoteHandler noteHandler, PhotonCameraWrapper... cameras) {
+    public AutoShootCommand(SwerveSubsystem swerve, NoteHandler noteHandler) {
         this.noteHandler = noteHandler;
 
         // figure out which tag we're aiming for

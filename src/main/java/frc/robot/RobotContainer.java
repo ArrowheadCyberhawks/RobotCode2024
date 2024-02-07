@@ -15,7 +15,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.*;
-import frc.robot.commands.AutoAmplifierCommand;
 import frc.robot.commands.AutoPositionCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.ElevatorTrapezoidCommand;
@@ -54,6 +53,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem;
   private final NoteHandler noteHandler;
+  private final ElevatorSubsystem elevatorSubsystem;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController;
@@ -65,9 +65,10 @@ public class RobotContainer {
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    noteHandler = new NoteHandler();
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
     swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig);
+    noteHandler = new NoteHandler();
+    elevatorSubsystem = new ElevatorSubsystem();
     driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
     manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPort);
     manipulatorJoystick = new CommandJoystick(OperatorConstants.kManipulatorJoystickPort);
@@ -91,7 +92,7 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
       // Register Named Commands
-      NamedCommands.registerCommand("AutoShootCommand", new AutoShootCommand(swerveSubsystem, noteHandler, photonCameraWrapper));
+      NamedCommands.registerCommand("AutoShootCommand", new AutoShootCommand(swerveSubsystem, noteHandler));
       NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
       NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
       NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
