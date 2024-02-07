@@ -4,8 +4,7 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.SwerveConstants.*;
-
+import java.io.File;
 import java.util.function.Supplier;
 
 import com.fasterxml.jackson.databind.Module;
@@ -24,15 +23,24 @@ import frc.robot.commands.NoteHandlerTrapezoidCommand;
 import frc.robot.commands.TurnInPlaceCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.NoteHandler;
 import lib.frc706.cyberlib.commands.XboxDriveCommand;
+
 import lib.frc706.cyberlib.subsystems.*;
 import static frc.robot.Constants.PositionalConstants.*;
+
+import lib.frc706.cyberlib.subsystems.SwerveSubsystem;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -57,18 +65,9 @@ public class RobotContainer {
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerveSubsystem = new SwerveSubsystem(SWERVE_MODULE_TYPE,
-      wheelBase,
-      driveMotorPorts,
-      turnMotorPorts,
-      absoluteEncoderPorts,
-      absoluteEncoderOffsets,
-      driveMotorsInverted,
-      turnMotorsInverted,
-      absoluteEncodersInverted,
-      pathFollowerConfig);
     noteHandler = new NoteHandler();
-
+    File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+    swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig);
     driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
     manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPort);
     manipulatorJoystick = new CommandJoystick(OperatorConstants.kManipulatorJoystickPort);
@@ -83,10 +82,11 @@ public class RobotContainer {
       reverseIntakeTrigger = manipulatorController.povDown();
       shootSpeed = manipulatorController::getRightTriggerAxis;
     }
-
+    
     swerveSubsystem.setDefaultCommand(getTeleopCommand());
     // Configure the trigger bindings
     configureBindings();
+    
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -120,15 +120,17 @@ public class RobotContainer {
    */
   private void configureBindings() {
     driverController.a()
-      .onTrue(swerveSubsystem.runOnce(swerveSubsystem::zeroHeading)) // reset gyro to 0 degrees when A is pressed
+      .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.zeroHeading();System.out.println("zeroing");})) // reset gyro to 0 degrees when A is pressed
       .debounce(2) //check if A is pressed for 2 seconds
-      .onTrue(swerveSubsystem.runOnce(swerveSubsystem::recenter)); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
+      .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.recenter();System.out.println("resetting robot pose");})); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
     shootTrigger.whileTrue(noteHandler.runShooterCommand(shootSpeed));
     intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->1.0));
     reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->1.0));
   }
 
   public Command getTeleopCommand() {
+    swerveSubsystem.swerveDrive.setHeadingCorrection(false);
+    //return swerveSubsystem.simDriveCommand(driverController::getLeftX, driverController::getLeftX, driverController::getRightX);
     return new XboxDriveCommand(driverController,
       swerveSubsystem,
       OperatorConstants.kDriverControllerDeadband,
@@ -144,7 +146,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
     return autoChooser.getSelected();
   }
 }
