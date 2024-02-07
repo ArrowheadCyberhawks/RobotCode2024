@@ -66,8 +66,8 @@ public final class Constants {
   }
 
   public static class ElevatorConstants {
-    public static final int kElevatorMotor1Port = 13; // CHANGE FOR REAL ROBOT
-    public static final int kElevatorMotor2Port = 14; // CHANGE FOR REAL ROBOT
+    public static final int kElevatorMotor1Port = 17; // CHANGE FOR REAL ROBOT
+    public static final int kElevatorMotor2Port = 18; // CHANGE FOR REAL ROBOT
 
     public static final double kMaxElevatorTrapezoidVelocity = 1000; // CHANGE FOR REAL ROBOT
     public static final double kMaxElevatorTrapezoidAccel = 1000; // CHANGE FOR REAL ROBOT

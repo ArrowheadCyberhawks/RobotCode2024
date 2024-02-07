@@ -90,13 +90,6 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-      // Subsystem initialization
-      
-      ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
-      NoteHandler noteHandler = new NoteHandler();
-      Transform3d transform3dPhoton = new Transform3d();
-      PhotonCameraWrapper photonCameraWrapper = new PhotonCameraWrapper("cameraName", transform3dPhoton);
-      SwerveSubsystem swerveSubsystem = new SwerveSubsystem(null, null, null, null, 0, pathFollowerConfig, null);// TODO:add values
       // Register Named Commands
       NamedCommands.registerCommand("AutoShootCommand", new AutoShootCommand(swerveSubsystem, noteHandler, photonCameraWrapper));
       NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
