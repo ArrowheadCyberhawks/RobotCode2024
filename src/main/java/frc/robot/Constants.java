@@ -7,6 +7,8 @@ package frc.robot;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 // import lib.frc706.cyberlib.BrushlessSparkWithPID;
 // import lib.frc706.cyberlib.subsystems.ModuleType;
@@ -44,6 +46,8 @@ public final class Constants {
     public static final double kMaxAngularVelAuto = OperatorConstants.kMaxAngularVelTele;
     public static final double kMaxAngularAccelAuto = OperatorConstants.kMaxAngularAccelTele;
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(kMaxVelAuto, driveBaseRadius, replanningConfig);
+
+    public static final Transform3d topCamRobotToCam = new Transform3d(Units.inchesToMeters(8), Units.inchesToMeters(4), Units.inchesToMeters(53), new Rotation3d());
   }
 
   public static class HandlerConstants {

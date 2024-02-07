@@ -7,37 +7,26 @@ package frc.robot;
 import java.io.File;
 import java.util.function.Supplier;
 
-import com.fasterxml.jackson.databind.Module;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
-
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.Constants.*;
 import frc.robot.commands.AutoPositionCommand;
 import frc.robot.commands.AutoShootCommand;
-import frc.robot.commands.ElevatorTrapezoidCommand;
-import frc.robot.commands.NoteHandlerTrapezoidCommand;
-import frc.robot.commands.TurnInPlaceCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.NoteHandler;
 import lib.frc706.cyberlib.commands.XboxDriveCommand;
 
-import lib.frc706.cyberlib.subsystems.*;
 import static frc.robot.Constants.PositionalConstants.*;
 
+import lib.frc706.cyberlib.subsystems.PhotonCameraWrapper;
 import lib.frc706.cyberlib.subsystems.SwerveSubsystem;
 
 
@@ -54,6 +43,7 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem;
   private final NoteHandler noteHandler;
   private final ElevatorSubsystem elevatorSubsystem;
+  private final PhotonCameraWrapper topCam;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController;
@@ -66,7 +56,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
-    swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig);
+    topCam = new PhotonCameraWrapper("topCam", SwerveConstants.topCamRobotToCam);
+    swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig, topCam);
     noteHandler = new NoteHandler();
     elevatorSubsystem = new ElevatorSubsystem();
     driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
