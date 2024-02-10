@@ -36,10 +36,12 @@ public class AutoShootCommand extends SequentialCommandGroup {
         this.noteHandler = noteHandler;
         this.swerveSubsystem = swerve;
         // figure out which tag we're aiming for
-        if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
-            targetTag = BLUE_SPEAKER_TAG;
-        } else if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
-            targetTag = RED_SPEAKER_TAG;
+        if(DriverStation.waitForDsConnection(60) && DriverStation.getAlliance().isPresent()) {
+            if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
+                targetTag = BLUE_SPEAKER_TAG;
+            } else if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
+                targetTag = RED_SPEAKER_TAG;
+            } 
         } else {
             targetTag = -1; // driver station broke so we just give up
         }
