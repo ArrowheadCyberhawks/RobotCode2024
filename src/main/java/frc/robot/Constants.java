@@ -7,9 +7,13 @@ package frc.robot;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
-import lib.frc706.cyberlib.subsystems.ModuleType;
-import lib.frc706.cyberlib.subsystems.ModuleTypes;
+// import lib.frc706.cyberlib.BrushlessSparkWithPID;
+// import lib.frc706.cyberlib.subsystems.ModuleType;
+// import lib.frc706.cyberlib.subsystems.ModuleTypes;
+import lib.frc706.cyberlib.BrushlessSparkWithPID;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -22,25 +26,63 @@ import lib.frc706.cyberlib.subsystems.ModuleTypes;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 2;
-    public static final double kDriverControllerDeadband = 0.05;
-    public static final double kMaxVelTele = SwerveConstants.SWERVE_MODULE_TYPE.getMaxVelocity();
+    public static final int kManipulatorControllerPort = 3;
+    public static final int kManipulatorJoystickPort = 4;
+    public static final double kManipulatorJoystickDeadband = 0.05;
+    public static final double kDriverControllerDeadband = 0.07;
+    public static final double kMaxVelTele = Units.feetToMeters(15);
     public static final double kMaxAccelTele = kMaxVelTele * 3; //idk what this should be
     public static final double kMaxAngularVelTele = 2 * 2 * Math.PI; //idk 2 radians per second whatever
     public static final double kMaxAngularAccelTele = kMaxAngularVelTele * 3;
   }
 
   public static class SwerveConstants {
-    public static final ModuleType SWERVE_MODULE_TYPE = ModuleTypes.MK4_L2;
     public static final double wheelBase = Units.inchesToMeters(29);
     public static final double driveBaseRadius = Math.sqrt(wheelBase * wheelBase * 2) / 2;
-    public static final int[] driveMotorPorts = {1, 3, 5, 7}; //CHANGE THESE FOR REAL ROBOT!
-    public static final int[] turnMotorPorts = {2, 4, 6, 8}; //CHANGE THESE FOR REAL ROBOT!
-    public static final int[] absoluteEncoderPorts = {0, 1, 2, 3}; //CHANGE THESE FOR REAL ROBOT!
-    public static final double[] absoluteEncoderOffsets = {0, 0, 0, 0}; //CHANGE THESE FOR REAL ROBOT!
-    public static final boolean[] driveMotorsInverted = {false, false, false, false}; //CHANGE THESE FOR REAL ROBOT!
-    public static final boolean[] turnMotorsInverted = {false, false, false, false}; //CHANGE THESE FOR REAL ROBOT!
-    public static final boolean[] absoluteEncodersInverted = {false, false, false, false}; //CHANGE THESE FOR REAL ROBOT!
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
-    public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(SWERVE_MODULE_TYPE.getMaxVelocity(), driveBaseRadius, replanningConfig);
+    
+    public static final double kMaxVelAuto = OperatorConstants.kMaxVelTele/5;
+    public static final double kMaxAccelAuto = OperatorConstants.kMaxAccelTele;
+    public static final double kMaxAngularVelAuto = OperatorConstants.kMaxAngularVelTele;
+    public static final double kMaxAngularAccelAuto = OperatorConstants.kMaxAngularAccelTele;
+    public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(kMaxVelAuto, driveBaseRadius, replanningConfig);
+
+    public static final Transform3d topCamRobotToCam = new Transform3d(Units.inchesToMeters(8), Units.inchesToMeters(4), Units.inchesToMeters(53), new Rotation3d());
+  }
+
+  public static class HandlerConstants {
+    public static final int kIntakeMotorPort = 13; // CHANGE FOR REAL ROBOT
+    public static final int kTiltMotorPort = 14; // CHANGE FOR REAL ROBOT
+    public static final int kShootMotor1Port = 15; // CHANGE FOR REAL ROBOT
+    public static final int kShootMotor2Port = 16; // CHANGE FOR REAL ROBOT
+
+    public static final double kTiltP = 1.0;
+    public static final double kTiltI = 0.0;
+    public static final double kTiltD = 0.0;
+    public static final double kTiltFF = 1.0;
+    public static final double kTiltIZone = 0.0;
+    public static final double kTiltMaxVel = BrushlessSparkWithPID.NEO1650_MAXRPM;
+    public static final double kTiltMaxAccel = 5000;
+    public static final double kTiltError = 1.0;
+
+    public static final double kMaxTiltTrapezoidVelocity = 1000; // CHANGE FOR REAL ROBOT
+    public static final double kMaxTiltTrapezoidAccel = 1000; // CHANGE FOR REAL ROBOT
+  }
+
+  public static class ElevatorConstants {
+    public static final int kElevatorMotor1Port = 17; // CHANGE FOR REAL ROBOT
+    public static final int kElevatorMotor2Port = 18; // CHANGE FOR REAL ROBOT
+
+    public static final double kMaxElevatorTrapezoidVelocity = 1000; // CHANGE FOR REAL ROBOT
+    public static final double kMaxElevatorTrapezoidAccel = 1000; // CHANGE FOR REAL ROBOT
+  }
+
+  public static class PositionalConstants {
+    public static final double kShootElevatorPosition = 1000; // CHANGE FOR REAL ROBOT
+    public static final double kShootNoteHandlerTilt = 1000; // CHANGE FOR REAL ROBOT
+    public static final double kIntakeElevatorPosition = 0; // CHANGE FOR REAL ROBOT
+    public static final double kIntakeNoteHandlerTilt = 0; // CHANGE FOR REAL ROBOT
+    public static final double kHumanPickUpElevatorPosition = 500; // CHANGE FOR REAL ROBOT
+    public static final double kHumanPickUpNoteHandlerTilt = 500; // CHANGE FOR REAL ROBOT
   }
 }
