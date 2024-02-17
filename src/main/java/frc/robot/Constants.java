@@ -53,8 +53,8 @@ public final class Constants {
   public static class HandlerConstants {
     public static final int kIntakeMotorPort = 13; // CHANGE FOR REAL ROBOT
     public static final int kTiltMotorPort = 14; // CHANGE FOR REAL ROBOT
-    public static final int kShootMotor1Port = 15; // CHANGE FOR REAL ROBOT
-    public static final int kShootMotor2Port = 16; // CHANGE FOR REAL ROBOT
+    public static final int kShootMotor1Port = 9;
+    public static final int kShootMotor2Port = 10;
 
     public static final double kTiltP = 1.0;
     public static final double kTiltI = 0.0;

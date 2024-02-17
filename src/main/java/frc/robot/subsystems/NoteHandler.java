@@ -18,7 +18,7 @@ public class NoteHandler extends SubsystemBase {
         intakeMotor = new BrushlessSparkWithPID(kIntakeMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO550_MAXRPM, 10000, 1.0);
         shootMotor1 = new BrushlessSparkWithPID(kShootMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor2 = new BrushlessSparkWithPID(kShootMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
-        shootMotor2.spark.follow(shootMotor1.spark, true);
+        shootMotor2.spark.follow(shootMotor1.spark, false);
         tiltMotor = new BrushlessSparkWithPID(kTiltMotorPort, kTiltP, kTiltI, kTiltD, kTiltFF, kTiltIZone, kTiltMaxVel, kTiltMaxAccel, kTiltError);
         setName("NoteHandler");
     }

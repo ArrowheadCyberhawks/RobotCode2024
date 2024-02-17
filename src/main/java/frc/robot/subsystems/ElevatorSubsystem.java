@@ -68,6 +68,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public Command runElevatorCommand(Supplier<Double> speed) {
-        return this.run(() -> this.setElevatorMotor(speed.get())).finallyDo(() -> stopElevator());
+        return this.run(() -> this.setElevatorMotor(speed.get())).finallyDo(() -> stopElevator()); //work you stupid robot
     }
 }
