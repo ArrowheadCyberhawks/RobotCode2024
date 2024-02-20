@@ -11,19 +11,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase {
     private BrushlessSparkWithPID elevatorMotor1;
-    private BrushlessSparkWithPID elevatorMotor2;
 
     public ElevatorSubsystem() {
         elevatorMotor1 = new BrushlessSparkWithPID(kElevatorMotor1Port, 1.0, 0, 0, 1.0, 0, BrushlessSparkWithPID.NEO1650_MAXRPM, 2000, 1.0);
-        elevatorMotor2 = new BrushlessSparkWithPID(kElevatorMotor2Port, 1.0, 0, 0, 1.0, 0, BrushlessSparkWithPID.NEO1650_MAXRPM, 2000, 1.0);
-        elevatorMotor2.spark.follow(elevatorMotor1.spark, true);
+    }
+
+    /**
+     * Sets the power of the elevator motors.
+     * @param speed Power of the elevator motors, from -1 to 1.
+     */
+    public void setElevatorMotor(double speed) {
+        elevatorMotor1.setPower(speed);
     }
 
     /**
      * Sets the speed of the elevator motors.
-     * @param speed Speed of the elevator motors in rotations per minute.
+     * @param speed desired speed in rotations per minute.
      */
-    public void setElevatorMotor(double speed) {
+    public void setElevatorVelocity(double speed) {
         elevatorMotor1.setVel(speed);
     }
 
@@ -32,7 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @return Position of the elevator motors in rotations.
      */
     public double getElevatorPosition() {
-        return elevatorMotor1.getPos();
+        return elevatorMotor1.getPosition();
     }
 
     /**
@@ -40,7 +45,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @return velocity of the elevator motors.
      */
     public double getElevatorVelocity() {
-        return elevatorMotor1.motorVel;
+        return elevatorMotor1.getVelocity();
     }
 
     /**
@@ -67,6 +72,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         return new TrapezoidProfile.State(getElevatorPosition(), getElevatorVelocity());
     }
 
+
+    /**
+     * Run the elevator at the specified power continuously until interrupted, then stops it at the end.
+     * @param speed Supplier for desired power of the elevator
+     * @return
+     */
     public Command runElevatorCommand(Supplier<Double> speed) {
         return this.run(() -> this.setElevatorMotor(speed.get())).finallyDo(() -> stopElevator()); //work you stupid robot
     }

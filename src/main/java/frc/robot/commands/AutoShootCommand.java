@@ -35,7 +35,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
         this.noteHandler = noteHandler;
         this.swerveSubsystem = swerve;
         // figure out which tag we're aiming for
-        if(DriverStation.waitForDsConnection(0) && DriverStation.getAlliance().isPresent()) {
+        if(DriverStation.waitForDsConnection(699) && DriverStation.getAlliance().isPresent()) {
             if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
                 targetTag = BLUE_SPEAKER_TAG;
             } else if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {

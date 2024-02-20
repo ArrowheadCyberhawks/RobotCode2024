@@ -51,27 +51,26 @@ public final class Constants {
   }
 
   public static class HandlerConstants {
-    public static final int kIntakeMotorPort = 13; // CHANGE FOR REAL ROBOT
-    public static final int kTiltMotorPort = 14; // CHANGE FOR REAL ROBOT
+    public static final int kIntakeMotorPort = 11; // CHANGE FOR REAL ROBOT
+    public static final int kTiltMotorPort = 12; // CHANGE FOR REAL ROBOT
     public static final int kShootMotor1Port = 9;
     public static final int kShootMotor2Port = 10;
 
-    public static final double kTiltP = 1.0;
+    public static final double kTiltP = 0.02;
     public static final double kTiltI = 0.0;
     public static final double kTiltD = 0.0;
-    public static final double kTiltFF = 1.0;
+    public static final double kTiltFF = 0.1;
     public static final double kTiltIZone = 0.0;
-    public static final double kTiltMaxVel = BrushlessSparkWithPID.NEO1650_MAXRPM;
-    public static final double kTiltMaxAccel = 5000;
+    public static final double kTiltMaxVel = 0;
+    public static final double kTiltMaxAccel = 0;
     public static final double kTiltError = 1.0;
 
-    public static final double kMaxTiltTrapezoidVelocity = 1000; // CHANGE FOR REAL ROBOT
-    public static final double kMaxTiltTrapezoidAccel = 1000; // CHANGE FOR REAL ROBOT
+    public static final double kMaxTiltTrapezoidVelocity = 0; // CHANGE FOR REAL ROBOT
+    public static final double kMaxTiltTrapezoidAccel = 0; // CHANGE FOR REAL ROBOT
   }
 
   public static class ElevatorConstants {
-    public static final int kElevatorMotor1Port = 17; // CHANGE FOR REAL ROBOT
-    public static final int kElevatorMotor2Port = 18; // CHANGE FOR REAL ROBOT
+    public static final int kElevatorMotor1Port = 13;
 
     public static final double kMaxElevatorTrapezoidVelocity = 1000; // CHANGE FOR REAL ROBOT
     public static final double kMaxElevatorTrapezoidAccel = 1000; // CHANGE FOR REAL ROBOT
