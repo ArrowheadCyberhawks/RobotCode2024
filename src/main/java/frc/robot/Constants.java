@@ -85,5 +85,8 @@ public final class Constants {
     public static final double kMinElevatorPosition = 0; // CHANGE FOR REAL ROBOT
     public static final double kMaxNoteHandlerTilt = 1000; // CHANGE FOR REAL ROBOT
     public static final double kMinNoteHandlerTilt = 0; // CHANGE FOR REAL ROBOT
+
+    public static final double groundToElevatorAngle = 50; // CHANGE FOR REAL ROBOT
+    public static final double chassisBottomToFloor = 5.75; // CHANGE FOR REAL ROBOT
   }
 }
