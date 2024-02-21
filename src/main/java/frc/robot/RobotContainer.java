@@ -4,22 +4,35 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.SwerveConstants.*;
-
+import java.io.File;
 import java.util.function.Supplier;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import org.photonvision.PhotonCamera;
 
-import frc.robot.Constants.*;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import frc.robot.commands.AutoPositionCommand;
+import frc.robot.commands.AutoShootCommand;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.SwerveConstants;
 import lib.frc706.cyberlib.commands.XboxDriveCommand;
-import lib.frc706.cyberlib.subsystems.*;
+
+import static frc.robot.Constants.PositionalConstants.*;
+
+import lib.frc706.cyberlib.subsystems.PhotonCameraWrapper;
+import lib.frc706.cyberlib.subsystems.SwerveSubsystem;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,6 +46,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem swerveSubsystem;
   private final NoteHandler noteHandler;
+  private final ElevatorSubsystem elevatorSubsystem;
+  private final PhotonCameraWrapper topCam;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController;
@@ -40,22 +55,16 @@ public class RobotContainer {
   private final CommandJoystick manipulatorJoystick;
 
   private final Trigger shootTrigger, intakeTrigger, reverseIntakeTrigger;
-  private final Supplier<Double> shootSpeed;
+  private final Supplier<Double> shootSpeed, reverseShootSpeed, elevatorSpeed, tiltSpeed;
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerveSubsystem = new SwerveSubsystem(SWERVE_MODULE_TYPE,
-      wheelBase,
-      driveMotorPorts,
-      turnMotorPorts,
-      absoluteEncoderPorts,
-      absoluteEncoderOffsets,
-      driveMotorsInverted,
-      turnMotorsInverted,
-      absoluteEncodersInverted,
-      pathFollowerConfig);
+    File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+    PhotonCamera.setVersionCheckEnabled(false);
+    topCam = new PhotonCameraWrapper("topCam", SwerveConstants.topCamRobotToCam);
+    swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig, topCam);
     noteHandler = new NoteHandler();
-
+    elevatorSubsystem = new ElevatorSubsystem();
     driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
     manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPort);
     manipulatorJoystick = new CommandJoystick(OperatorConstants.kManipulatorJoystickPort);
@@ -64,18 +73,33 @@ public class RobotContainer {
       intakeTrigger = manipulatorJoystick.povUp();
       reverseIntakeTrigger = manipulatorJoystick.povDown();
       shootSpeed = manipulatorJoystick::getThrottle;
+      elevatorSpeed = manipulatorJoystick::getX;
     } else {
       shootTrigger = manipulatorController.rightTrigger(OperatorConstants.kManipulatorJoystickDeadband);
       intakeTrigger = manipulatorController.povUp();
       reverseIntakeTrigger = manipulatorController.povDown();
       shootSpeed = manipulatorController::getRightTriggerAxis;
+      elevatorSpeed = manipulatorController::getLeftY;
     }
-
+    reverseShootSpeed = manipulatorController::getLeftTriggerAxis;
+    tiltSpeed = manipulatorController::getRightY;
     swerveSubsystem.setDefaultCommand(getTeleopCommand());
     // Configure the trigger bindings
     configureBindings();
+    
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+      // Register Named Commands
+      //NamedCommands.registerCommand("AutoShootCommand", new AutoShootCommand(swerveSubsystem, noteHandler));
+      NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
+      NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
+      NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
+
+      // Do all other initialization
+      configureBindings();
+
+
   }
 
   /**
@@ -89,15 +113,19 @@ public class RobotContainer {
    */
   private void configureBindings() {
     driverController.a()
-      .onTrue(swerveSubsystem.runOnce(swerveSubsystem::zeroHeading)) // reset gyro to 0 degrees when A is pressed
+      .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.zeroHeading();swerveSubsystem.swerveDrive.synchronizeModuleEncoders();System.out.println("zeroing");})) // reset gyro to 0 degrees when A is pressed
       .debounce(2) //check if A is pressed for 2 seconds
-      .onTrue(swerveSubsystem.runOnce(swerveSubsystem::recenter)); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
-    shootTrigger.whileTrue(noteHandler.runShooterCommand(shootSpeed));
-    intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->1.0));
-    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->1.0));
+      .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.recenter();System.out.println("resetting robot pose");})); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
+    shootTrigger.or(()->reverseShootSpeed.get()>0.05).whileTrue(noteHandler.runShooterCommand(()->{return (shootSpeed.get()-reverseShootSpeed.get())*0.75;}));
+    intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.5));
+    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.5));
+    manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
+    // manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(tiltSpeed.get()/4))).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
+    manipulatorController.rightStick().whileTrue(new RunCommand(() -> {noteHandler.setTiltPosition(noteHandler.getTiltPosition()-tiltSpeed.get()*3);}));//.onFalse(new InstantCommand(()->noteHandler.stopTilt()));
   }
 
   public Command getTeleopCommand() {
+    swerveSubsystem.swerveDrive.setHeadingCorrection(false);
     return new XboxDriveCommand(driverController,
       swerveSubsystem,
       OperatorConstants.kDriverControllerDeadband,
@@ -113,7 +141,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
     return autoChooser.getSelected();
   }
 }

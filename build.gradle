@@ -1,6 +1,7 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2024.1.1"
+    id "java-library"
+    id "edu.wpi.first.GradleRIO" version "2024.2.1"
 }
 
 java {
@@ -72,7 +73,7 @@ dependencies {
 
     testImplementation(platform('org.junit:junit-bom:5.10.1'))
 
-    implementation project(":CyberLib")
+    api project(":CyberLib")
 }
 
 test {
@@ -88,6 +89,7 @@ wpi.sim.addDriverstation()
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
+    dependsOn(':CyberLib:jar')
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     from sourceSets.main.allSource
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)

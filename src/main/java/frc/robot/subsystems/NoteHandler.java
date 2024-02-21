@@ -18,8 +18,9 @@ public class NoteHandler extends SubsystemBase {
         intakeMotor = new BrushlessSparkWithPID(kIntakeMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO550_MAXRPM, 10000, 1.0);
         shootMotor1 = new BrushlessSparkWithPID(kShootMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor2 = new BrushlessSparkWithPID(kShootMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
-        shootMotor2.spark.follow(shootMotor1.spark, true);
-        tiltMotor = new BrushlessSparkWithPID(kTiltMotorPort, kTiltP, kTiltI, kTiltD, kTiltFF, kTiltIZone, kTiltMaxVel, kTiltMaxAccel, kTiltError);
+        shootMotor2.spark.follow(shootMotor1.spark, false);
+        tiltMotor = new BrushlessSparkWithPID(kTiltMotorPort);
+        tiltMotor.setPIDSlot(0);
         setName("NoteHandler");
     }
 
@@ -64,6 +65,14 @@ public class NoteHandler extends SubsystemBase {
     }
 
     /**
+     * Sets the position of the tilt motor.
+     * @param pos Desired position of the motor.
+     */
+    public void setTiltPosition(double pos) {
+        tiltMotor.setPos(pos);
+    }
+
+    /**
      * Sets the velocity of the tilt motor.
      * @param velocity Velocity of the tilt motor in rotations per minute.
      */
@@ -76,7 +85,7 @@ public class NoteHandler extends SubsystemBase {
      * @return position of the tilt motor.
      */
     public double getTiltPosition() {
-        return tiltMotor.getPos();
+        return tiltMotor.getPosition();
     }
 
     /**
@@ -92,7 +101,7 @@ public class NoteHandler extends SubsystemBase {
      * @return velocity of the tilt motor.
      */
     public double getTiltVelocity() {
-        return tiltMotor.motorVel;
+        return tiltMotor.getVelocity();
     }
 
     /**

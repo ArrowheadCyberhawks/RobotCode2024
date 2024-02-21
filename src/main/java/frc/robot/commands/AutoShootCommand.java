@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.NoteHandler;
 
-import lib.frc706.cyberlib.subsystems.PhotonCameraWrapper;
 import lib.frc706.cyberlib.subsystems.SwerveSubsystem;
 
 public class AutoShootCommand extends SequentialCommandGroup {
@@ -22,6 +21,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
     private static double TARGET_HEIGHT = 2.05; //meters
     private static double SHOOTER_HEIGHT = Units.inchesToMeters(27); //meters TODO: figure out what this actually is
     private final NoteHandler noteHandler;
+    private final SwerveSubsystem swerveSubsystem;
     private Pose2d robotPose;
     private int targetTag;
     private Pose3d targetPose;
@@ -31,14 +31,16 @@ public class AutoShootCommand extends SequentialCommandGroup {
      * @param noteHandler The note handler subsystem to use
      * @param cameras The cameras to use
      */
-    public AutoShootCommand(SwerveSubsystem swerve, NoteHandler noteHandler, PhotonCameraWrapper... cameras) {
+    public AutoShootCommand(SwerveSubsystem swerve, NoteHandler noteHandler) {
         this.noteHandler = noteHandler;
-
+        this.swerveSubsystem = swerve;
         // figure out which tag we're aiming for
-        if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
-            targetTag = BLUE_SPEAKER_TAG;
-        } else if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
-            targetTag = RED_SPEAKER_TAG;
+        if(DriverStation.waitForDsConnection(699) && DriverStation.getAlliance().isPresent()) {
+            if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
+                targetTag = BLUE_SPEAKER_TAG;
+            } else if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
+                targetTag = RED_SPEAKER_TAG;
+            } 
         } else {
             targetTag = -1; // driver station broke so we just give up
         }
@@ -61,6 +63,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
      * @return Angle to the speaker in radians
      */
     public Rotation3d getAngleToSpeaker() {
+        robotPose = swerveSubsystem.getPose();
         double v = noteHandler.getShootSpeed();
         double deltaX = targetPose.toPose2d().getTranslation().getDistance(robotPose.getTranslation());
         double deltaY = TARGET_HEIGHT - SHOOTER_HEIGHT;

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
@@ -22,7 +23,7 @@ public class TurnInPlaceCommand extends TrapezoidProfileCommand {
             new TrapezoidProfile(
                 new Constraints(maxVelocity, maxAcceleration)
             ),
-            setpointState -> swerveSubsystem.drive(0, 0, setpointState.velocity, false),
+            setpointState -> swerveSubsystem.driveRobotRelative(new ChassisSpeeds(0, 0, setpointState.velocity)),
             () -> new State(targetAngle, 0),
             () -> new State(swerveSubsystem.getRotation2d().getRadians(), Units.degreesToRadians(swerveSubsystem.getTurnRate())),
             swerveSubsystem
