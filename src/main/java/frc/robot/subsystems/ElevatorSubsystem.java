@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.ElevatorConstants.kElevatorMotor1Port;
 import static frc.robot.Constants.PositionalConstants.chassisBottomToFloor;
 import static frc.robot.Constants.PositionalConstants.groundToElevatorAngle;
+import static frc.robot.Constants.PositionalConstants.maxElevatorPosition;
 
 import java.util.function.Supplier;
 
@@ -14,10 +15,13 @@ import lib.frc706.cyberlib.BrushlessSparkWithPID;
 
 public class ElevatorSubsystem extends SubsystemBase {
     private BrushlessSparkWithPID elevatorMotor1;
-    private AnalogPotentiometer hippoTunes;
+    private AnalogPotentiometer elevatorPotentiometer;
+
+    
 
     public ElevatorSubsystem() {
         elevatorMotor1 = new BrushlessSparkWithPID(kElevatorMotor1Port, 1.0, 0, 0, 1.0, 0, BrushlessSparkWithPID.NEO1650_MAXRPM, 2000, 1.0);
+        elevatorPotentiometer = new AnalogPotentiometer((4 + 0), maxElevatorPosition);
     }
 
     /**
@@ -61,19 +65,18 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     /**
      * Gets the notehandler height from ground.
-     * @return notehandler height.
+     * @return notehandler height in meters.
      */
-    public double getNoteHandlerHeight() {
+    public double getElevatorHeight() {
         return Math.sin(groundToElevatorAngle) * getHippoTunesDistance() + chassisBottomToFloor;
     }
 
     /**
      * Gets the distance of the analog potentiometer connected to the notehandler.
-     * @return distance of the analog potentiometer.
+     * @return distance of the analog potentiometer in meters.
      */
     private double getHippoTunesDistance() {
-        hippoTunes = new AnalogPotentiometer(4 + 0);
-        return hippoTunes.get();
+        return elevatorPotentiometer.get();
     }
 
 
@@ -84,23 +87,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void setElevatorState(TrapezoidProfile.State setPoint) {
         double velocity = setPoint.velocity;
         setElevatorMotor(velocity);
-    }
-
-    /**
-     * Gets the notehandler height from ground.
-     * @return notehandler height.
-     */
-    public double getNoteHandlerHeight() {
-        return Math.sin(groundToElevatorAngle) * getHippoTunesDistance() + chassisBottomToFloor;
-    }
-
-    /**
-     * Gets the distance of the analog potentiometer connected to the notehandler.
-     * @return distance of the analog potentiometer.
-     */
-    private double getHippoTunesDistance() {
-        hippoTunes = new AnalogPotentiometer(4 + 0);
-        return hippoTunes.get();
     }
 
     /**)

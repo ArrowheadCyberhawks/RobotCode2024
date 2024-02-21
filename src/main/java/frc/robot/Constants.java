@@ -85,6 +85,7 @@ public final class Constants {
     public static final double kHumanPickUpNoteHandlerTilt = 500; // CHANGE FOR REAL ROBOT
 
     public static final double groundToElevatorAngle = 50; // CHANGE FOR REAL ROBOT
-    public static final double chassisBottomToFloor = 5.75; // CHANGE FOR REAL ROBOT
+    public static final double chassisBottomToFloor = Units.inchesToMeters(5.75); // CHANGE FOR REAL ROBOT
+    public static final double maxElevatorPosition = 1; // CHANGE FOR REAL ROBOT
   }
 }
