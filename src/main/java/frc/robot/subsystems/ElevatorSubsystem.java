@@ -1,16 +1,20 @@
 package frc.robot.subsystems;
 
-import lib.frc706.cyberlib.BrushlessSparkWithPID;
-import static frc.robot.Constants.ElevatorConstants.*;
+import static frc.robot.Constants.ElevatorConstants.kElevatorMotor1Port;
+import static frc.robot.Constants.PositionalConstants.chassisBottomToFloor;
+import static frc.robot.Constants.PositionalConstants.groundToElevatorAngle;
 
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import lib.frc706.cyberlib.BrushlessSparkWithPID;
 
 public class ElevatorSubsystem extends SubsystemBase {
     private BrushlessSparkWithPID elevatorMotor1;
+    private AnalogPotentiometer hippoTunes;
 
     public ElevatorSubsystem() {
         elevatorMotor1 = new BrushlessSparkWithPID(kElevatorMotor1Port, 1.0, 0, 0, 1.0, 0, BrushlessSparkWithPID.NEO1650_MAXRPM, 2000, 1.0);
@@ -54,6 +58,24 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void stopElevator() {
         elevatorMotor1.spark.stopMotor();
     }
+
+    /**
+     * Gets the notehandler height from ground.
+     * @return notehandler height.
+     */
+    public double getNoteHandlerHeight() {
+        return Math.sin(groundToElevatorAngle) * getHippoTunesDistance() + chassisBottomToFloor;
+    }
+
+    /**
+     * Gets the distance of the analog potentiometer connected to the notehandler.
+     * @return distance of the analog potentiometer.
+     */
+    private double getHippoTunesDistance() {
+        hippoTunes = new AnalogPotentiometer(4 + 0);
+        return hippoTunes.get();
+    }
+
 
     /**
      * Sets the velocity of the motors using a trapezoid profile state.
