@@ -35,7 +35,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
         this.noteHandler = noteHandler;
         this.swerveSubsystem = swerve;
         // figure out which tag we're aiming for
-        if(DriverStation.waitForDsConnection(699) && DriverStation.getAlliance().isPresent()) {
+        if(DriverStation.waitForDsConnection(60) && DriverStation.getAlliance().isPresent()) {
             if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
                 targetTag = BLUE_SPEAKER_TAG;
             } else if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
@@ -58,11 +58,26 @@ public class AutoShootCommand extends SequentialCommandGroup {
                 noteHandler.setShooterCommand(0)); //stop the shooter, TODO: we should probably have a method for this
     }
 
+    private void updateTargetTag() {
+        // figure out which tag we're aiming for again
+        if(DriverStation.waitForDsConnection(60) && DriverStation.getAlliance().isPresent()) {
+            if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Blue)) {
+                targetTag = BLUE_SPEAKER_TAG;
+            } else if (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red)) {
+                targetTag = RED_SPEAKER_TAG;
+            } 
+        } else {
+            targetTag = -1; // driver station broke so we just give up
+        }
+        targetPose = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetTag).orElseThrow();
+    }
+
     /**
      * Gets the angle to the speaker in radians.
      * @return Angle to the speaker in radians
      */
     public Rotation3d getAngleToSpeaker() {
+        updateTargetTag();
         robotPose = swerveSubsystem.getPose();
         double v = noteHandler.getShootSpeed();
         double deltaX = targetPose.toPose2d().getTranslation().getDistance(robotPose.getTranslation());
