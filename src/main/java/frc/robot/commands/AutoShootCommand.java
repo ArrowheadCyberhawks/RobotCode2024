@@ -1,8 +1,11 @@
 package frc.robot.commands;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -47,9 +50,9 @@ public class AutoShootCommand extends SequentialCommandGroup {
         addRequirements(noteHandler); // no one else can use the note handler right now
         targetPose = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetTag).orElseThrow(); // figure out where the tag is
         addCommands(// setup our command sequence
-                noteHandler.setShooterCommand(1.0), //start the shooter
+                //noteHandler.setShooterCommand(1.0), //start the shooter
                 new ParallelCommandGroup(
-                        new TurnInPlaceCommand(swerve, swerve.getRotation2d().getRadians() + getAngleToSpeaker().getZ(), // turn to face the speaker
+                        new TurnInPlaceCommand(swerve, Rotation2d.fromDegrees(-((AHRS) swerveSubsystem.swerveDrive.getGyro().getIMU()).getAngle()).getRadians() + getAngleToSpeaker().getZ(), // turn to face the speaker
                                 Constants.SwerveConstants.kMaxAngularVelAuto,
                                 Constants.SwerveConstants.kMaxAngularAccelAuto),
                         new NoteHandlerTrapezoidCommand(noteHandler, // tilt the shooter to the correct angle

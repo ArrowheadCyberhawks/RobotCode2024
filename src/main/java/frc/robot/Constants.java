@@ -10,10 +10,6 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
-// import lib.frc706.cyberlib.BrushlessSparkWithPID;
-// import lib.frc706.cyberlib.subsystems.ModuleType;
-// import lib.frc706.cyberlib.subsystems.ModuleTypes;
-import lib.frc706.cyberlib.BrushlessSparkWithPID;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -41,13 +37,14 @@ public final class Constants {
     public static final double driveBaseRadius = Math.sqrt(wheelBase * wheelBase * 2) / 2;
     public static final ReplanningConfig replanningConfig = new ReplanningConfig(true, true);
     
-    public static final double kMaxVelAuto = OperatorConstants.kMaxVelTele/5;
-    public static final double kMaxAccelAuto = OperatorConstants.kMaxAccelTele;
+    public static final double kMaxVelAuto = OperatorConstants.kMaxVelTele/10;
+    public static final double kMaxAccelAuto = OperatorConstants.kMaxAccelTele/10;
     public static final double kMaxAngularVelAuto = OperatorConstants.kMaxAngularVelTele;
     public static final double kMaxAngularAccelAuto = OperatorConstants.kMaxAngularAccelTele;
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(kMaxVelAuto, driveBaseRadius, replanningConfig);
 
-    public static final Transform3d topCamRobotToCam = new Transform3d(Units.inchesToMeters(8), Units.inchesToMeters(4), Units.inchesToMeters(53), new Rotation3d());
+    public static final Transform3d frontCamRobotToCam = new Transform3d(Units.inchesToMeters(15), Units.inchesToMeters(0), Units.inchesToMeters(6.5), new Rotation3d(0,Math.PI/6,0));
+    public static final Transform3d backCamRobotToCam = new Transform3d(Units.inchesToMeters(-10), Units.inchesToMeters(-1), Units.inchesToMeters(18), new Rotation3d(0, 0, Math.PI));
   }
 
   public static class HandlerConstants {

@@ -14,7 +14,7 @@ import lib.frc706.cyberlib.BrushlessSparkWithPID;
 
 public class ElevatorSubsystem extends SubsystemBase {
     private BrushlessSparkWithPID elevatorMotor1;
-    private AnalogPotentiometer hippoTunes;
+    private AnalogPotentiometer elevatorPot; //we are not calling this hippotunes
 
     public ElevatorSubsystem() {
         elevatorMotor1 = new BrushlessSparkWithPID(kElevatorMotor1Port, 1.0, 0, 0, 1.0, 0, BrushlessSparkWithPID.NEO1650_MAXRPM, 2000, 1.0);
@@ -72,8 +72,8 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @return distance of the analog potentiometer.
      */
     private double getHippoTunesDistance() {
-        hippoTunes = new AnalogPotentiometer(4 + 0);
-        return hippoTunes.get();
+        elevatorPot = new AnalogPotentiometer(4 + 0);
+        return elevatorPot.get();
     }
 
 

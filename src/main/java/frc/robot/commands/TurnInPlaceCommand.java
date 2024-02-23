@@ -1,10 +1,12 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.TrapezoidProfileCommand;
 import lib.frc706.cyberlib.subsystems.SwerveSubsystem;
 
@@ -25,7 +27,7 @@ public class TurnInPlaceCommand extends TrapezoidProfileCommand {
             ),
             setpointState -> swerveSubsystem.driveRobotRelative(new ChassisSpeeds(0, 0, setpointState.velocity)),
             () -> new State(targetAngle, 0),
-            () -> new State(swerveSubsystem.getRotation2d().getRadians(), Units.degreesToRadians(swerveSubsystem.getTurnRate())),
+            () -> new State(Rotation2d.fromDegrees(-((AHRS) swerveSubsystem.swerveDrive.getGyro().getIMU()).getAngle()).getRadians(), Units.degreesToRadians(swerveSubsystem.getTurnRate())),
             swerveSubsystem
         );
         this.targetAngle = targetAngle;
@@ -34,6 +36,6 @@ public class TurnInPlaceCommand extends TrapezoidProfileCommand {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(swerveSubsystem.getRotation2d().getRadians() - targetAngle) < 0.1 && Math.abs(Units.degreesToRadians(swerveSubsystem.getTurnRate())) < 0.1;
+        return Math.abs(swerveSubsystem.getRotation2d().getRadians() - targetAngle) < 0.01 && Math.abs(Units.degreesToRadians(swerveSubsystem.getTurnRate())) < 0.1;
     }
 }

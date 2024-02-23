@@ -8,18 +8,17 @@ import java.io.File;
 import java.util.function.Supplier;
 
 import org.photonvision.PhotonCamera;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.commands.AutoPositionCommand;
 import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.TurnInPlaceCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -47,7 +46,8 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem;
   private final NoteHandler noteHandler;
   private final ElevatorSubsystem elevatorSubsystem;
-  private final PhotonCameraWrapper topCam;
+  private final PhotonCameraWrapper frontCam;
+  private final PhotonCameraWrapper backCam;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController;
@@ -61,8 +61,9 @@ public class RobotContainer {
   public RobotContainer() {
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
     PhotonCamera.setVersionCheckEnabled(false);
-    topCam = new PhotonCameraWrapper("topCam", SwerveConstants.topCamRobotToCam);
-    swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig, topCam);
+    frontCam = new PhotonCameraWrapper("frontCam", SwerveConstants.frontCamRobotToCam);
+    backCam = new PhotonCameraWrapper("backCam", SwerveConstants.backCamRobotToCam);
+    swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig, frontCam, backCam);
     noteHandler = new NoteHandler();
     elevatorSubsystem = new ElevatorSubsystem();
     driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -91,7 +92,7 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
       // Register Named Commands
-      //NamedCommands.registerCommand("AutoShootCommand", new AutoShootCommand(swerveSubsystem, noteHandler));
+      NamedCommands.registerCommand("AutoShootCommand", new AutoShootCommand(swerveSubsystem, noteHandler));
       NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
       NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
       NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
@@ -121,7 +122,10 @@ public class RobotContainer {
     reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.5));
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
     // manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(tiltSpeed.get()/4))).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
-    manipulatorController.rightStick().whileTrue(new RunCommand(() -> {noteHandler.setTiltPosition(noteHandler.getTiltPosition()-tiltSpeed.get()*3);}));//.onFalse(new InstantCommand(()->noteHandler.stopTilt()));
+    // manipulatorController.rightStick().whileTrue(new RunCommand(() -> {noteHandler.setTiltPosition(noteHandler.getTiltPosition()-Math.pow(tiltSpeed.get(),3)*1.5);}));
+    // manipulatorController.rightStick().whileTrue
+    manipulatorController.rightStick().whileTrue(new RunCommand(() -> {noteHandler.setTiltVelocity(-Math.pow(tiltSpeed.get(),1)*0.1);}));
+    manipulatorController.b().whileTrue(new TurnInPlaceCommand(swerveSubsystem, Math.PI/2, 1, 1));
   }
 
   public Command getTeleopCommand() {

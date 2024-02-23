@@ -14,7 +14,10 @@ public class NoteHandler extends SubsystemBase {
     private BrushlessSparkWithPID shootMotor1, shootMotor2;
     private BrushlessSparkWithPID tiltMotor;
 
+    private double desiredTilt;
+
     public NoteHandler() {
+        desiredTilt = 0;
         intakeMotor = new BrushlessSparkWithPID(kIntakeMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO550_MAXRPM, 10000, 1.0);
         shootMotor1 = new BrushlessSparkWithPID(kShootMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor2 = new BrushlessSparkWithPID(kShootMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
@@ -77,7 +80,8 @@ public class NoteHandler extends SubsystemBase {
      * @param velocity Velocity of the tilt motor in rotations per minute.
      */
     public void setTiltVelocity(double velocity) {
-        tiltMotor.setVel(velocity);
+        desiredTilt += velocity;
+        tiltMotor.setPos(desiredTilt);
     }
 
     /**
