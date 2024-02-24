@@ -5,9 +5,13 @@ import static frc.robot.Constants.HandlerConstants.*;
 
 import java.util.function.Supplier;
 
+import com.revrobotics.CANSparkBase.SoftLimitDirection;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.HandlerConstants;
 
 public class NoteHandler extends SubsystemBase {
     private BrushlessSparkWithPID intakeMotor;
@@ -24,6 +28,10 @@ public class NoteHandler extends SubsystemBase {
         shootMotor2.spark.follow(shootMotor1.spark, false);
         tiltMotor = new BrushlessSparkWithPID(kTiltMotorPort);
         tiltMotor.setPIDSlot(0);
+        tiltMotor.spark.setSoftLimit(SoftLimitDirection.kForward, kMaxTilt);
+        tiltMotor.spark.setSoftLimit(SoftLimitDirection.kReverse, kMinTilt);
+        shootMotor1.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
+        shootMotor2.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
         setName("NoteHandler");
     }
 
@@ -72,7 +80,8 @@ public class NoteHandler extends SubsystemBase {
      * @param pos Desired position of the motor.
      */
     public void setTiltPosition(double pos) {
-        tiltMotor.setPos(pos);
+        desiredTilt = MathUtil.clamp(pos, HandlerConstants.kMinTilt, HandlerConstants.kMaxTilt);
+        tiltMotor.setPos(desiredTilt);
     }
 
     /**
@@ -80,8 +89,7 @@ public class NoteHandler extends SubsystemBase {
      * @param velocity Velocity of the tilt motor in rotations per minute.
      */
     public void setTiltVelocity(double velocity) {
-        desiredTilt += velocity;
-        tiltMotor.setPos(desiredTilt);
+        setTiltPosition(desiredTilt + velocity);
     }
 
     /**
@@ -113,8 +121,9 @@ public class NoteHandler extends SubsystemBase {
      * @param setPoint the desired state of the tilt motor.
      */
     public void setTiltState(TrapezoidProfile.State setPoint) {
-        double velocity = setPoint.velocity;
-        setTiltVelocity(velocity);
+        // double velocity = setPoint.velocity;
+        // setTiltVelocity(velocity);
+        setTiltPosition(setPoint.position);
     }
 
     /**
@@ -157,5 +166,9 @@ public class NoteHandler extends SubsystemBase {
      */
     public Command runIntakeCommand(Supplier<Double> speed) {
         return this.run(() -> this.setIntakeMotor(speed.get())).finallyDo(()->setIntakeMotor(0));
+    }
+
+    public Command setTiltCommand(Supplier<Double> position) {
+        return this.runOnce(() -> this.setTiltPosition(position.get()));
     }
 }

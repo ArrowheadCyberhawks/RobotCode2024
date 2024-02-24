@@ -62,8 +62,13 @@ public final class Constants {
     public static final double kTiltMaxAccel = 0;
     public static final double kTiltError = 1.0;
 
-    public static final double kMaxTiltTrapezoidVelocity = 0; // CHANGE FOR REAL ROBOT
-    public static final double kMaxTiltTrapezoidAccel = 0; // CHANGE FOR REAL ROBOT
+    public static final double kMaxTiltTrapezoidVelocity = 1; // CHANGE FOR REAL ROBOT
+    public static final double kMaxTiltTrapezoidAccel = 1; // CHANGE FOR REAL ROBOT
+
+    public static final float kMaxTilt = 9;
+    public static final float kMinTilt = 1;
+
+    public static final double kShootWheelRadius = Units.inchesToMeters(2);
   }
 
   public static class ElevatorConstants {

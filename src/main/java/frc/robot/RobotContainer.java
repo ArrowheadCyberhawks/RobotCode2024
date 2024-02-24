@@ -12,14 +12,15 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.commands.AutoPositionCommand;
 import frc.robot.commands.AutoShootCommand;
-import frc.robot.commands.TurnInPlaceCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -49,6 +50,8 @@ public class RobotContainer {
   private final PhotonCameraWrapper frontCam;
   private final PhotonCameraWrapper backCam;
 
+  private Command teleopCommand;
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController;
   private final CommandXboxController manipulatorController;
@@ -69,6 +72,13 @@ public class RobotContainer {
     driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
     manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPort);
     manipulatorJoystick = new CommandJoystick(OperatorConstants.kManipulatorJoystickPort);
+    teleopCommand = new XboxDriveCommand(driverController,
+      swerveSubsystem,
+      OperatorConstants.kDriverControllerDeadband,
+      OperatorConstants.kMaxVelTele,
+      OperatorConstants.kMaxAccelTele,
+      OperatorConstants.kMaxAngularVelTele,
+      OperatorConstants.kMaxAngularAccelTele).withInterruptBehavior(InterruptionBehavior.kCancelSelf);
     if(manipulatorJoystick.getHID().isConnected()) {
       shootTrigger = manipulatorJoystick.trigger();
       intakeTrigger = manipulatorJoystick.povUp();
@@ -100,7 +110,7 @@ public class RobotContainer {
       // Do all other initialization
       configureBindings();
 
-
+    
   }
 
   /**
@@ -118,25 +128,16 @@ public class RobotContainer {
       .debounce(2) //check if A is pressed for 2 seconds
       .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.recenter();System.out.println("resetting robot pose");})); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
     shootTrigger.or(()->reverseShootSpeed.get()>0.05).whileTrue(noteHandler.runShooterCommand(()->{return (shootSpeed.get()-reverseShootSpeed.get())*0.75;}));
-    intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.5));
-    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.5));
+    intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.25));
+    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.25));
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
-    // manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(tiltSpeed.get()/4))).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
-    // manipulatorController.rightStick().whileTrue(new RunCommand(() -> {noteHandler.setTiltPosition(noteHandler.getTiltPosition()-Math.pow(tiltSpeed.get(),3)*1.5);}));
-    // manipulatorController.rightStick().whileTrue
-    manipulatorController.rightStick().whileTrue(new RunCommand(() -> {noteHandler.setTiltVelocity(-Math.pow(tiltSpeed.get(),1)*0.1);}));
-    manipulatorController.b().whileTrue(new TurnInPlaceCommand(swerveSubsystem, Math.PI/2, 1, 1));
+    manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltVelocity(-tiltSpeed.get()*0.1)));
+    manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule));
   }
 
   public Command getTeleopCommand() {
     swerveSubsystem.swerveDrive.setHeadingCorrection(false);
-    return new XboxDriveCommand(driverController,
-      swerveSubsystem,
-      OperatorConstants.kDriverControllerDeadband,
-      OperatorConstants.kMaxVelTele,
-      OperatorConstants.kMaxAccelTele,
-      OperatorConstants.kMaxAngularVelTele,
-      OperatorConstants.kMaxAngularAccelTele);
+    return teleopCommand;
   }
 
   /**
