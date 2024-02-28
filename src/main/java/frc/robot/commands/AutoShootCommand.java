@@ -51,8 +51,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
                         new TurnInPlaceCommand(swerve, this::getAngleToSpeaker, // turn to face the speaker
                                 Constants.SwerveConstants.kMaxAngularVelAuto,
                                 Constants.SwerveConstants.kMaxAngularAccelAuto).withInterruptBehavior(InterruptionBehavior.kCancelIncoming),
-                        // new NoteHandlerTrapezoidCommand(noteHandler, // tilt the shooter to the correct angle
-                        //         () -> new TrapezoidProfile.State(Units.radiansToRotations(getPitch()+0.75)*25, 0)).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)),
                         noteHandler.setTiltCommand(this::getPitch)),
                 //noteHandler.runIntakeCommand(() -> 1.0).withTimeout(1), // run the intake for 1 second
                 noteHandler.setShooterCommand(0)); //stop the shooter, TODO: we should probably have a method for this
@@ -89,7 +87,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
     private double getPitch() {
         updateTargetTag();
         robotPose = swerveSubsystem.getPose();
-        double v = 30;//noteHandler.getShootSpeed(); TODO: how fast does the notehandler spin????
+        double v = 31;//noteHandler.getShootSpeed(); TODO: how fast does the notehandler spin????
         double deltaX = targetPose.toPose2d().getTranslation().getDistance(robotPose.getTranslation());
         double deltaY = TARGET_HEIGHT - SHOOTER_HEIGHT;
         double pitch = Math.min(
@@ -97,6 +95,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
                         / (G * deltaX)),
                 Math.atan((v * v + Math.sqrt(v * v * v * v - G * (G * deltaX * deltaX + 2 * deltaY * v * v)))
                         / (G * deltaX)));
-        return Units.radiansToRotations(pitch+0.55)*30;
+        return Units.radiansToRotations(pitch+0.6)*25;//0.57
     }
 }

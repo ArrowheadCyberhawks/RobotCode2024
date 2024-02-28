@@ -20,12 +20,12 @@ public class TurnInPlaceCommand extends PIDCommand {
      */
     public TurnInPlaceCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier targetAngle, double maxVelocity, double maxAcceleration) {
         super(
-            new PIDController(4, 0, 0),
+            new PIDController(4.5, 0, 0),
             () -> swerveSubsystem.swerveDrive.getOdometryHeading().getRadians(),
             targetAngle,
             (double setpointState) -> {
                 swerveSubsystem.swerveDrive.drive(new Translation2d(),
-                        -swerveSubsystem.swerveDrive.getOdometryHeading().getRadians()+setpointState,true,true);System.out.println("actual:" + setpointState);
+                        -swerveSubsystem.swerveDrive.getOdometryHeading().getRadians()+setpointState,true,true);
             },
             swerveSubsystem
         );
@@ -35,6 +35,6 @@ public class TurnInPlaceCommand extends PIDCommand {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(swerveSubsystem.getRotation2d().getRadians() - targetAngle.getAsDouble()) < 0.01 && Math.abs(Units.degreesToRadians(swerveSubsystem.getTurnRate())) < 0.01;
+        return Math.abs(swerveSubsystem.getRotation2d().getRadians() - targetAngle.getAsDouble()) < 0.03 && Math.abs(Units.degreesToRadians(swerveSubsystem.getTurnRate())) < 0.01;
     }
 }
