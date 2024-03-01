@@ -76,6 +76,13 @@ public final class Constants {
     public static final double kMaxElevatorTrapezoidAccel = 1000; // CHANGE FOR REAL ROBOT
   }
 
+  public static class ClimbConstants {
+    public static final int kLiftMotor1Port = 15; // CHANGE FOR REAL ROBOT
+    public static final int kLiftMotor2Port = 16; // CHANGE FOR REAL ROBOT
+    public static final int kRollerMotor1Port = 17; // CHANGE FOR REAL ROBOT
+    public static final int kRollerMotor2Port = 18; // CHANGE FOR REAL ROBOT
+  }
+
   public static class PositionalConstants {
     public static final double kShootElevatorPosition = 1000; // CHANGE FOR REAL ROBOT
     public static final double kShootNoteHandlerTilt = 1000; // CHANGE FOR REAL ROBOT

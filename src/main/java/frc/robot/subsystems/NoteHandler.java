@@ -82,7 +82,7 @@ public class NoteHandler extends SubsystemBase {
 
     /**
      * Gets the position of the tilt motor.
-     * @return position of the tilt motor.
+     * @return position of the tilt motor in rotations per minute.
      */
     public double getTiltPosition() {
         return tiltMotor.getPosition();
