@@ -81,6 +81,8 @@ public final class Constants {
     public static final int kLiftMotor2Port = 16; // CHANGE FOR REAL ROBOT
     public static final int kRollerMotor1Port = 17; // CHANGE FOR REAL ROBOT
     public static final int kRollerMotor2Port = 18; // CHANGE FOR REAL ROBOT
+    public static final int kSpinnySolenoid1Port = 0; // CHANGE FOR REAL ROBOT
+    public static final int kSpinnySolenoid2Port = 1; // CHANGE FOR REAL ROBOT
   }
 
   public static class PositionalConstants {
