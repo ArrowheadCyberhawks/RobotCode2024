@@ -16,12 +16,12 @@ public class NoteHandler extends SubsystemBase {
     private BrushlessSparkWithPID intakeMotor;
 
     public NoteHandler() {
-        centerMotor = new BrushlessSparkWithPID(kIntakeMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
+        centerMotor = new BrushlessSparkWithPID(kCenterMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor1 = new BrushlessSparkWithPID(kShootMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor2 = new BrushlessSparkWithPID(kShootMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         intakeMotor = new BrushlessSparkWithPID(kIntakeMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO550_MAXRPM, 10000, 1.0);
         shootMotor2.spark.follow(shootMotor1.spark, false); 
-        intakeMotor.spark.follow(centerMotor.spark, false);
+        centerMotor.spark.follow(intakeMotor.spark, false);
         tiltMotor = new BrushlessSparkWithPID(kTiltMotorPort);
         tiltMotor.setPIDSlot(0);
         setName("NoteHandler");
@@ -32,7 +32,7 @@ public class NoteHandler extends SubsystemBase {
      * @param speed Power of the intake motor, from -1 to 1.
      */
     public void setIntakeMotor(double speed) {
-        centerMotor.setPower(speed);
+        intakeMotor.setPower(speed);
     }
     
     /**
@@ -40,7 +40,7 @@ public class NoteHandler extends SubsystemBase {
      * @param velocity Speed of the intake motor in rotations per minute.
      */
     public void setIntakeVelocity(double velocity) {
-        centerMotor.setVel(velocity); 
+        intakeMotor.setVel(velocity); 
     }
 
     /**

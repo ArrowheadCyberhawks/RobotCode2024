@@ -24,6 +24,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorPotentiometer = new AnalogPotentiometer((4 + 0), maxElevatorPosition);
     }
 
+    @Override
+    public void periodic() {
+    }
+
     /**
      * Sets the power of the elevator motors.
      * @param speed Power of the elevator motors, from -1 to 1.
