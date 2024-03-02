@@ -4,9 +4,14 @@ import static frc.robot.Constants.ClimbConstants.kLiftMotor1Port;
 import static frc.robot.Constants.ClimbConstants.kLiftMotor2Port;
 import static frc.robot.Constants.ClimbConstants.kRollerMotor1Port;
 import static frc.robot.Constants.ClimbConstants.kRollerMotor2Port;
+import static frc.robot.Constants.ClimbConstants.kSpinnySolenoid1Port;
+import static frc.robot.Constants.ClimbConstants.kSpinnySolenoid2Port;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import lib.frc706.cyberlib.BrushlessSparkWithPID;
@@ -16,12 +21,16 @@ public class ClimbSubsystem extends SubsystemBase {
     private BrushlessSparkWithPID liftMotor2;
     private BrushlessSparkWithPID rollerMotor1;
     private BrushlessSparkWithPID rollerMotor2;
+    private final Solenoid spinnySolenoid1;
+    private final Solenoid spinnySolenoid2;
 
     public ClimbSubsystem() {
         liftMotor1 = new BrushlessSparkWithPID(kLiftMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         liftMotor2 = new BrushlessSparkWithPID(kLiftMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         rollerMotor1 = new BrushlessSparkWithPID(kRollerMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         rollerMotor2 = new BrushlessSparkWithPID(kRollerMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
+        spinnySolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, kSpinnySolenoid1Port);
+        spinnySolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, kSpinnySolenoid2Port);
         liftMotor2.spark.follow(liftMotor1.spark, true);
         rollerMotor2.spark.follow(rollerMotor1.spark, true);
         setName("ClimSubsystem");
@@ -90,6 +99,22 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     /**
+     * extends climb solenoids.
+     */
+    public void extendSolenoids() {
+        spinnySolenoid1.set(true);
+        spinnySolenoid2.set(true);
+    }
+
+    /**
+     * retracts climb solenoids.
+     */
+    public void retractSolenoids() {
+        spinnySolenoid1.set(false);
+        spinnySolenoid2.set(false);
+    }
+
+    /**
      * Sets the lift motors to a specified power level.
      * @param speed power level to set the lift motors to.
      * @return command to set the lift motors to a specified power level.
@@ -123,5 +148,21 @@ public class ClimbSubsystem extends SubsystemBase {
      */
     public Command runRollerCommand(Supplier<Double> speed) {
         return this.run(() -> this.setRollerMotors(speed.get())).finallyDo(()->setRollerMotors(0));
+    }
+
+    /**
+     * extends climb solenoids.
+     * @return Command to extend climb solenoids.
+     */
+    public Command extendSolenoidCommand() {
+        return this.runOnce(() -> this.extendSolenoids());
+    }
+
+    /**
+     * retracts climb solenoids.
+     * @return Command to retract climb solenoids.
+     */
+    public Command retractSolenoidCommand() {
+        return this.runOnce(() -> this.retractSolenoids());
     }
 }
