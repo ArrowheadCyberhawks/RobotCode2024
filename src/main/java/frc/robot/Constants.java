@@ -10,10 +10,6 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
-// import lib.frc706.cyberlib.BrushlessSparkWithPID;
-// import lib.frc706.cyberlib.subsystems.ModuleType;
-// import lib.frc706.cyberlib.subsystems.ModuleTypes;
-import lib.frc706.cyberlib.BrushlessSparkWithPID;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean

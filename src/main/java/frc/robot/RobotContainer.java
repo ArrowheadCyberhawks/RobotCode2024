@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.commands.AutoPositionCommand;
 import frc.robot.commands.AutoShootCommand;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -48,13 +49,14 @@ public class RobotContainer {
   private final NoteHandler noteHandler;
   private final ElevatorSubsystem elevatorSubsystem;
   private final PhotonCameraWrapper topCam;
+  private final ClimbSubsystem climbSubsystem;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController;
   private final CommandXboxController manipulatorController;
   private final CommandJoystick manipulatorJoystick;
 
-  private final Trigger shootTrigger, intakeTrigger, reverseIntakeTrigger;
+  private final Trigger shootTrigger, intakeTrigger, reverseIntakeTrigger, solenoidTrigger;
   private final Supplier<Double> shootSpeed, reverseShootSpeed, elevatorSpeed, tiltSpeed;
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -66,6 +68,7 @@ public class RobotContainer {
     noteHandler = new NoteHandler();
     elevatorSubsystem = new ElevatorSubsystem();
     driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    climbSubsystem = new ClimbSubsystem();
     manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPort);
     manipulatorJoystick = new CommandJoystick(OperatorConstants.kManipulatorJoystickPort);
     if(manipulatorJoystick.getHID().isConnected()) {
@@ -76,13 +79,14 @@ public class RobotContainer {
       elevatorSpeed = manipulatorJoystick::getX;
     } else {
       shootTrigger = manipulatorController.rightTrigger(OperatorConstants.kManipulatorJoystickDeadband);
-      intakeTrigger = manipulatorController.povUp();
-      reverseIntakeTrigger = manipulatorController.povDown();
+      intakeTrigger = manipulatorController.rightBumper();
+      reverseIntakeTrigger = manipulatorController.leftBumper();
       shootSpeed = manipulatorController::getRightTriggerAxis;
       elevatorSpeed = manipulatorController::getLeftY;
     }
     reverseShootSpeed = manipulatorController::getLeftTriggerAxis;
     tiltSpeed = manipulatorController::getRightY;
+    solenoidTrigger = manipulatorController.start();
     swerveSubsystem.setDefaultCommand(getTeleopCommand());
     // Configure the trigger bindings
     configureBindings();
@@ -122,6 +126,7 @@ public class RobotContainer {
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
     // manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(tiltSpeed.get()/4))).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
     manipulatorController.rightStick().whileTrue(new RunCommand(() -> {noteHandler.setTiltPosition(noteHandler.getTiltPosition()-tiltSpeed.get()*3);}));//.onFalse(new InstantCommand(()->noteHandler.stopTilt()));
+    solenoidTrigger.onTrue(climbSubsystem.extendSolenoidCommand()).onFalse(climbSubsystem.retractSolenoidCommand());
   }
 
   public Command getTeleopCommand() {

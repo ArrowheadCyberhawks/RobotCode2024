@@ -29,8 +29,8 @@ public class ClimbSubsystem extends SubsystemBase {
         liftMotor2 = new BrushlessSparkWithPID(kLiftMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         rollerMotor1 = new BrushlessSparkWithPID(kRollerMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         rollerMotor2 = new BrushlessSparkWithPID(kRollerMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
-        spinnySolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, kSpinnySolenoid1Port);
-        spinnySolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, kSpinnySolenoid2Port);
+        spinnySolenoid1 = new Solenoid(25, PneumaticsModuleType.CTREPCM, kSpinnySolenoid1Port);
+        spinnySolenoid2 = new Solenoid(25, PneumaticsModuleType.CTREPCM, kSpinnySolenoid2Port);
         liftMotor2.spark.follow(liftMotor1.spark, true);
         rollerMotor2.spark.follow(rollerMotor1.spark, true);
         setName("ClimSubsystem");
