@@ -76,8 +76,8 @@ public class RobotContainer {
       elevatorSpeed = manipulatorJoystick::getX;
     } else {
       shootTrigger = manipulatorController.rightTrigger(OperatorConstants.kManipulatorJoystickDeadband);
-      intakeTrigger = manipulatorController.povUp();
-      reverseIntakeTrigger = manipulatorController.povDown();
+      intakeTrigger = manipulatorController.rightBumper();
+      reverseIntakeTrigger = manipulatorController.leftBumper();
       shootSpeed = manipulatorController::getRightTriggerAxis;
       elevatorSpeed = manipulatorController::getLeftY;
     }
@@ -117,8 +117,8 @@ public class RobotContainer {
       .debounce(2) //check if A is pressed for 2 seconds
       .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.recenter();System.out.println("resetting robot pose");})); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
     shootTrigger.or(()->reverseShootSpeed.get()>0.05).whileTrue(noteHandler.runShooterCommand(()->{return (shootSpeed.get()-reverseShootSpeed.get())*0.75;}));
-    intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.1));
-    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.1));
+    intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.2));
+    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.2));
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
     // manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(tiltSpeed.get()/4))).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
     manipulatorController.rightStick().whileTrue(new RunCommand(() -> {noteHandler.setTiltPosition(noteHandler.getTiltPosition()-tiltSpeed.get()*3);}));//.onFalse(new InstantCommand(()->noteHandler.stopTilt()));
