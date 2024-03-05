@@ -56,7 +56,7 @@ public class RobotContainer {
   private final CommandXboxController manipulatorController;
   private final CommandJoystick manipulatorJoystick;
 
-  private final Trigger shootTrigger, intakeTrigger, reverseIntakeTrigger, solenoidTrigger;
+  private final Trigger shootTrigger, intakeTrigger, reverseIntakeTrigger, solenoidTrigger, liftTrigger, reverseLiftTrigger;
   private final Supplier<Double> shootSpeed, reverseShootSpeed, elevatorSpeed, tiltSpeed;
   
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -86,6 +86,8 @@ public class RobotContainer {
     }
     reverseShootSpeed = manipulatorController::getLeftTriggerAxis;
     tiltSpeed = manipulatorController::getRightY;
+    liftTrigger = manipulatorController.povUp();
+    reverseLiftTrigger = manipulatorController.povDown();
     solenoidTrigger = manipulatorController.start();
     swerveSubsystem.setDefaultCommand(getTeleopCommand());
     // Configure the trigger bindings
@@ -127,6 +129,8 @@ public class RobotContainer {
     // manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(tiltSpeed.get()/4))).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
     manipulatorController.rightStick().whileTrue(new RunCommand(() -> {noteHandler.setTiltPosition(noteHandler.getTiltPosition()-tiltSpeed.get()*3);}));//.onFalse(new InstantCommand(()->noteHandler.stopTilt()));
     solenoidTrigger.onTrue(climbSubsystem.extendSolenoidCommand()).onFalse(climbSubsystem.retractSolenoidCommand());
+    liftTrigger.whileTrue(climbSubsystem.setLiftCommand(0.25));
+    reverseLiftTrigger.whileTrue(climbSubsystem.setLiftCommand(-0.25));
   }
 
   public Command getTeleopCommand() {

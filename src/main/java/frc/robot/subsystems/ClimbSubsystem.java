@@ -94,7 +94,7 @@ public class ClimbSubsystem extends SubsystemBase {
     /**
      * stops the roller motors.
      */
-    public void stopRollorMotors() {
+    public void stopRollerMotors() {
         rollerMotor1.spark.stopMotor();
     }
 
@@ -120,7 +120,7 @@ public class ClimbSubsystem extends SubsystemBase {
      * @return command to set the lift motors to a specified power level.
      */
     public Command setLiftCommand(double speed) {
-        return this.runOnce(() -> this.setLiftMotors(speed));
+        return this.run(() -> this.setLiftMotors(speed)).finallyDo(this::stopLiftMotors);
     }
 
     /**
@@ -129,7 +129,7 @@ public class ClimbSubsystem extends SubsystemBase {
      * @return command to set the roller motors to a specified power level.
      */
     public Command setRollerCommand(double speed) {
-        return this.runOnce(() -> this.setRollerMotors(speed));
+        return this.runOnce(() -> this.setRollerMotors(speed)).finallyDo(this::stopRollerMotors);
     }
 
     /**
