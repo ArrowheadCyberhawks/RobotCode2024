@@ -115,39 +115,39 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     /**
-     * Sets the lift motors to a specified power level.
+     * Sets the lift motors to a specified power level, DOES NOT STOP AFTERWARDS.
      * @param speed power level to set the lift motors to.
      * @return command to set the lift motors to a specified power level.
      */
     public Command setLiftCommand(double speed) {
-        return this.run(() -> this.setLiftMotors(speed)).finallyDo(this::stopLiftMotors);
+        return this.run(() -> this.setLiftMotors(speed));
     }
 
     /**
-     * Sets the roller motors to a specified power level.
+     * Sets the roller motors to a specified power level, DOES NOT STOP AFTERWARDS.
      * @param speed power level to set the roller motors to.
      * @return command to set the roller motors to a specified power level.
      */
     public Command setRollerCommand(double speed) {
-        return this.runOnce(() -> this.setRollerMotors(speed)).finallyDo(this::stopRollerMotors);
+        return this.runOnce(() -> this.setRollerMotors(speed));
     }
 
     /**
-     * Runs the lift motors at a specified power level until interrupted.
+     * Runs the lift motors at a specified power level until interrupted, then stops the motors.
      * @param speed Power level to run the lift motors at.
      * @return Command to run the lift motors at a specified power level.
      */
     public Command runLiftCommand(Supplier<Double> speed) {
-        return this.run(() -> this.setLiftMotors(speed.get())).finallyDo(()->setLiftMotors(0));
+        return this.run(() -> this.setLiftMotors(speed.get())).finallyDo(this::stopLiftMotors);
     }
 
     /**
-     * Runs the roller motors at a specified power level until interrupted.
+     * Runs the roller motors at a specified power level until interrupted, then stops the motors.
      * @param speed Power level to run roller motors at.
      * @return Command to run the roller motors at a specified power level.
      */
     public Command runRollerCommand(Supplier<Double> speed) {
-        return this.run(() -> this.setRollerMotors(speed.get())).finallyDo(()->setRollerMotors(0));
+        return this.run(() -> this.setRollerMotors(speed.get())).finallyDo(this::stopRollerMotors);
     }
 
     /**
