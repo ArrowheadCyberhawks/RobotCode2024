@@ -165,4 +165,13 @@ public class ClimbSubsystem extends SubsystemBase {
     public Command retractSolenoidCommand() {
         return this.runOnce(() -> this.retractSolenoids());
     }
+
+    /**
+     * Moves lift and roller motors in sync
+     * @param speed speed of both sets of motors.
+     * @return Command to move all climb motors at once.
+     */
+    public Command comboLiftCommand(Supplier<Double> speed) {
+        return runLiftCommand(speed).alongWith(runRollerCommand(speed));
+    }
 }
