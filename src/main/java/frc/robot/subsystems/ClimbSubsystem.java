@@ -99,6 +99,14 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     /**
+     * stops all motors.
+     */
+    public void stopAllMotors() {
+        stopLiftMotors();
+        stopRollerMotors();
+    }
+
+    /**
      * extends climb solenoids.
      */
     public void extendSolenoids() {
@@ -168,10 +176,14 @@ public class ClimbSubsystem extends SubsystemBase {
 
     /**
      * Moves lift and roller motors in sync
-     * @param speed speed of both sets of motors.
+     * @param liftSpeed speed of lifter motors
+     * @param rollerSpeed speed of roller motors
      * @return Command to move all climb motors at once.
      */
-    public Command comboLiftCommand(Supplier<Double> speed) {
-        return runLiftCommand(speed).alongWith(runRollerCommand(speed));
+    public Command comboLiftCommand(Supplier<Double> liftSpeed, Supplier<Double> rollerSpeed) {
+        return this.run(() -> {
+            this.setRollerMotors(rollerSpeed.get());
+            this.setLiftMotors(liftSpeed.get());
+        }).finallyDo(this::stopAllMotors);
     }
 }
