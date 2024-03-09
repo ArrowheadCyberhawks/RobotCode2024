@@ -81,7 +81,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
         double yaw = Math.atan(targetPose.toPose2d().getTranslation().minus(robotPose.getTranslation()).getY()/targetPose.toPose2d().getTranslation().minus(robotPose.getTranslation()).getX());
         yaw %= Math.PI;
         System.out.println(yaw);
-        return yaw;
+        return yaw+Math.PI;//turn around because we shoot backwards now
     }
 
     private double getPitch() {
@@ -95,8 +95,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
                         / (G * deltaX)),
                 Math.atan((v * v + Math.sqrt(v * v * v * v - G * (G * deltaX * deltaX + 2 * deltaY * v * v)))
                         / (G * deltaX))); // don't even try to understand this
-        double yaw = Math.atan2(targetPose.toPose2d().getTranslation().getY() - robotPose.getTranslation().getY(),
-                targetPose.toPose2d().getTranslation().getX() - robotPose.getTranslation().getX());
-        return Math.PI-pitch;
+        return Math.PI-pitch;//shoot backwards
     }
 }

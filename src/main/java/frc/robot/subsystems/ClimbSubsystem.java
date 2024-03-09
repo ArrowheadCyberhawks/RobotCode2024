@@ -9,7 +9,6 @@ import static frc.robot.Constants.ClimbConstants.kSpinnySolenoid2Port;
 
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
