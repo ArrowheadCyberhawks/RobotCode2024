@@ -129,8 +129,8 @@ public class RobotContainer {
     // manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(tiltSpeed.get()/4))).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
     manipulatorController.rightStick().whileTrue(new RunCommand(() -> {noteHandler.setTiltPosition(noteHandler.getTiltPosition()-tiltSpeed.get()*3);}));//.onFalse(new InstantCommand(()->noteHandler.stopTilt()));
     solenoidTrigger.onTrue(climbSubsystem.extendSolenoidCommand()).onFalse(climbSubsystem.retractSolenoidCommand());
-    liftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->0.25,()->0.5));//.alongWith(climbSubsystem.runRollerCommand(()->-0.1)));
-    reverseLiftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->-0.25,()->-.5));//.alongWith(climbSubsystem.runRollerCommand(()->0.1)));
+    liftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->0.25));//.alongWith(climbSubsystem.runRollerCommand(()->-0.1)));
+    reverseLiftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->-0.25));//.alongWith(climbSubsystem.runRollerCommand(()->0.1)));
   }
 
   public Command getTeleopCommand() {
