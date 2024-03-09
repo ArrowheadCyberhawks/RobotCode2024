@@ -16,7 +16,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import lib.frc706.cyberlib.BrushlessSparkWithPID;
 
+/**
+ * public class to control climb subsystem.
+ */
 public class ClimbSubsystem extends SubsystemBase {
+
+    /**
+     * creates motors and solenoids in code so we can control them.
+     */
     private BrushlessSparkWithPID liftMotor1;
     private BrushlessSparkWithPID liftMotor2;
     private BrushlessSparkWithPID rollerMotor1;
@@ -24,6 +31,9 @@ public class ClimbSubsystem extends SubsystemBase {
     private final Solenoid spinnySolenoid1;
     private final Solenoid spinnySolenoid2;
 
+    /**
+     * Initializes motors and solenoids.
+     */
     public ClimbSubsystem() {
         liftMotor1 = new BrushlessSparkWithPID(kLiftMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         liftMotor2 = new BrushlessSparkWithPID(kLiftMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
