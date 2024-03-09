@@ -66,13 +66,14 @@ public class RobotContainer {
   public RobotContainer() {
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
     PhotonCamera.setVersionCheckEnabled(false);
+    /** Initiallize variables */
     frontCam = new PhotonCameraWrapper("frontCam", SwerveConstants.frontCamRobotToCam);
     backCam = new PhotonCameraWrapper("backCam", SwerveConstants.backCamRobotToCam);
     swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig, frontCam, backCam);
     noteHandler = new NoteHandler();
     elevatorSubsystem = new ElevatorSubsystem();
   
-    // Register Named Commands
+    // Register Named Commands for autonomous. Very important for the auto to work.
     NamedCommands.registerCommand("AutoShootCommand", new SequentialCommandGroup(new AutoShootCommand(swerveSubsystem, noteHandler),
     noteHandler.setShooterCommand(0.75),
     new WaitCommand(2),
@@ -81,7 +82,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
-
+/** Set controller variables */
     driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
     manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPort);
     manipulatorJoystick = new CommandJoystick(OperatorConstants.kManipulatorJoystickPort);
