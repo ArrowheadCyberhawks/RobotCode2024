@@ -9,12 +9,22 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * public class to control note handler.
+ */
 public class NoteHandler extends SubsystemBase {
+
+    /**
+     * creates motors in code so we can control them.
+     */
     private BrushlessSparkWithPID centerMotor;
     private BrushlessSparkWithPID shootMotor1, shootMotor2;
     private BrushlessSparkWithPID tiltMotor;
     private BrushlessSparkWithPID intakeMotor;
 
+    /**
+     * initializes motors.
+     */
     public NoteHandler() {
         centerMotor = new BrushlessSparkWithPID(kCenterMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor1 = new BrushlessSparkWithPID(kShootMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);

@@ -13,12 +13,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import lib.frc706.cyberlib.BrushlessSparkWithPID;
 
+/**
+ * public class to control elevator subsystem.
+ */
 public class ElevatorSubsystem extends SubsystemBase {
+
+    /**
+     * creates motor and potenteometer in code so we can control them.
+     */
     private BrushlessSparkWithPID elevatorMotor1;
     private AnalogPotentiometer elevatorPotentiometer;
 
-    
-
+    /**
+     * initializes motor and potenteometer
+     */
     public ElevatorSubsystem() {
         elevatorMotor1 = new BrushlessSparkWithPID(kElevatorMotor1Port, 1.0, 0, 0, 1.0, 0, BrushlessSparkWithPID.NEO1650_MAXRPM, 2000, 1.0);
         elevatorPotentiometer = new AnalogPotentiometer((4 + 0), maxElevatorPosition);
