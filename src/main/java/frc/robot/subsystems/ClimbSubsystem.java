@@ -176,6 +176,18 @@ public class ClimbSubsystem extends SubsystemBase {
 
     /**
      * Moves lift and roller motors in sync
+     * @param speed Speed of the climb, positive is up
+     * @return Command to move all climb motors at once.
+     */
+    public Command comboLiftCommand(Supplier<Double> speed) {
+        return this.run(() -> {
+            this.setRollerMotors(-speed.get()*2);
+            this.setLiftMotors(speed.get());
+        }).finallyDo(this::stopAllMotors);
+    }
+
+    /**
+     * Moves lift and roller motors in sync
      * @param liftSpeed speed of lifter motors
      * @param rollerSpeed speed of roller motors
      * @return Command to move all climb motors at once.
