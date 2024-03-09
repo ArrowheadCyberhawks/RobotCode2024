@@ -10,15 +10,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class NoteHandler extends SubsystemBase {
-    private BrushlessSparkWithPID intakeMotor;
+    private BrushlessSparkWithPID centerMotor;
     private BrushlessSparkWithPID shootMotor1, shootMotor2;
     private BrushlessSparkWithPID tiltMotor;
+    private BrushlessSparkWithPID intakeMotor;
 
     public NoteHandler() {
-        intakeMotor = new BrushlessSparkWithPID(kIntakeMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO550_MAXRPM, 10000, 1.0);
+        centerMotor = new BrushlessSparkWithPID(kCenterMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor1 = new BrushlessSparkWithPID(kShootMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor2 = new BrushlessSparkWithPID(kShootMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
-        shootMotor2.spark.follow(shootMotor1.spark, false);
+        intakeMotor = new BrushlessSparkWithPID(kIntakeMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO550_MAXRPM, 10000, 1.0);
+        shootMotor2.spark.follow(shootMotor1.spark, false); 
+        centerMotor.spark.follow(intakeMotor.spark, false);
         tiltMotor = new BrushlessSparkWithPID(kTiltMotorPort);
         tiltMotor.setPIDSlot(0);
         setName("NoteHandler");

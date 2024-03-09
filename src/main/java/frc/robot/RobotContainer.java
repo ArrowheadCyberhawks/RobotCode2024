@@ -76,8 +76,8 @@ public class RobotContainer {
       elevatorSpeed = manipulatorJoystick::getX;
     } else {
       shootTrigger = manipulatorController.rightTrigger(OperatorConstants.kManipulatorJoystickDeadband);
-      intakeTrigger = manipulatorController.povUp();
-      reverseIntakeTrigger = manipulatorController.povDown();
+      intakeTrigger = manipulatorController.rightBumper();
+      reverseIntakeTrigger = manipulatorController.leftBumper();
       shootSpeed = manipulatorController::getRightTriggerAxis;
       elevatorSpeed = manipulatorController::getLeftY;
     }
