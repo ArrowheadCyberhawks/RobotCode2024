@@ -89,6 +89,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
                         / (G * deltaX))); // don't even try to understand this
         double yaw = Math.atan2(targetPose.toPose2d().getTranslation().getY() - robotPose.getTranslation().getY(),
                 targetPose.toPose2d().getTranslation().getX() - robotPose.getTranslation().getX());
-        return new Rotation3d(0, pitch, yaw);
+        return new Rotation3d(0, Math.PI-pitch, yaw+Math.PI);
     }
 }

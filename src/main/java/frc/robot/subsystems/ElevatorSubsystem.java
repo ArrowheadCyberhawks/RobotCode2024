@@ -29,6 +29,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      */
     public ElevatorSubsystem() {
         elevatorMotor1 = new BrushlessSparkWithPID(kElevatorMotor1Port, 1.0, 0, 0, 1.0, 0, BrushlessSparkWithPID.NEO1650_MAXRPM, 2000, 1.0);
+        setName("ElevatorSubsystem");
         elevatorPotentiometer = new AnalogPotentiometer((4 + 0), maxElevatorPosition);
     }
 

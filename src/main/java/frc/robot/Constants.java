@@ -10,10 +10,6 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
-// import lib.frc706.cyberlib.BrushlessSparkWithPID;
-// import lib.frc706.cyberlib.subsystems.ModuleType;
-// import lib.frc706.cyberlib.subsystems.ModuleTypes;
-import lib.frc706.cyberlib.BrushlessSparkWithPID;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -75,6 +71,15 @@ public final class Constants {
 
     public static final double kMaxElevatorTrapezoidVelocity = 1000; // CHANGE FOR REAL ROBOT
     public static final double kMaxElevatorTrapezoidAccel = 1000; // CHANGE FOR REAL ROBOT
+  }
+
+  public static class ClimbConstants {
+    public static final int kLiftMotor1Port = 15;
+    public static final int kLiftMotor2Port = 17;
+    public static final int kRollerMotor1Port = 18;
+    public static final int kRollerMotor2Port = 16;
+    public static final int kSpinnySolenoid1Port = 0; // CHANGE FOR REAL ROBOT
+    public static final int kSpinnySolenoid2Port = 1; // CHANGE FOR REAL ROBOT
   }
 
   public static class PositionalConstants {
