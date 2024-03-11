@@ -29,7 +29,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
      * Command to automatically point the robot at the speaker and shoot a ring.
      * @param swerve The swerve subsystem to use
      * @param noteHandler The note handler subsystem to use
-     * @param cameras The cameras to use
      */
     public AutoShootCommand(SwerveSubsystem swerve, NoteHandler noteHandler) {
         this.noteHandler = noteHandler;
@@ -89,6 +88,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
                         / (G * deltaX))); // don't even try to understand this
         double yaw = Math.atan2(targetPose.toPose2d().getTranslation().getY() - robotPose.getTranslation().getY(),
                 targetPose.toPose2d().getTranslation().getX() - robotPose.getTranslation().getX());
-        return new Rotation3d(0, Math.PI-pitch, yaw+Math.PI);
+        return new Rotation3d(0, pitch, yaw);
     }
 }

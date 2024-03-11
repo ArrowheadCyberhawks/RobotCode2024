@@ -43,7 +43,7 @@ public class ClimbSubsystem extends SubsystemBase {
         spinnySolenoid2 = new Solenoid(25, PneumaticsModuleType.CTREPCM, kSpinnySolenoid2Port);
         liftMotor2.spark.follow(liftMotor1.spark, true);
         rollerMotor2.spark.follow(rollerMotor1.spark, true);
-        setName("ClimSubsystem");
+        setName("ClimbSubsystem");
     }
 
     /**
