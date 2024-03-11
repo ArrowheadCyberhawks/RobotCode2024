@@ -28,7 +28,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
      * Command to automatically point the robot at the speaker and shoot a ring.
      * @param swerve The swerve subsystem to use
      * @param noteHandler The note handler subsystem to use
-     * @param cameras The cameras to use
      */
     public AutoShootCommand(SwerveSubsystem swerve, NoteHandler noteHandler) {
         this.swerveSubsystem = swerve;
@@ -95,6 +94,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
                         / (G * deltaX)),
                 Math.atan((v * v + Math.sqrt(v * v * v * v - G * (G * deltaX * deltaX + 2 * deltaY * v * v)))
                         / (G * deltaX))); // don't even try to understand this
-        return Math.PI-pitch;//shoot backwards
+        return pitch;//shoot backwards
     }
 }
