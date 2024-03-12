@@ -38,7 +38,7 @@ public class NoteHandler extends SubsystemBase {
         shootMotor2 = new BrushlessSparkWithPID(kShootMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         intakeMotor = new BrushlessSparkWithPID(kIntakeMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO550_MAXRPM, 10000, 1.0);
         shootMotor2.spark.follow(shootMotor1.spark, false); 
-        centerMotor.spark.follow(intakeMotor.spark, false);
+        centerMotor.spark.follow(intakeMotor.spark, true);
         tiltMotor = new BrushlessSparkWithPID(kTiltMotorPort);
         tiltMotor.setPIDSlot(0);
         tiltMotor.spark.setSoftLimit(SoftLimitDirection.kForward, kMaxTilt);

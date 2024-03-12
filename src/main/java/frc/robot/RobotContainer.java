@@ -50,8 +50,7 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem;
   private final NoteHandler noteHandler;
   private final ElevatorSubsystem elevatorSubsystem;
-  private final PhotonCameraWrapper frontCam;
-  private final PhotonCameraWrapper backCam;
+  private final PhotonCameraWrapper frontCam, backCam, logiCam;
 
   private Command teleopCommand;
   private final ClimbSubsystem climbSubsystem;
@@ -71,6 +70,7 @@ public class RobotContainer {
     /** Initiallize variables */
     frontCam = new PhotonCameraWrapper("frontCam", SwerveConstants.frontCamRobotToCam);
     backCam = new PhotonCameraWrapper("backCam", SwerveConstants.backCamRobotToCam);
+    logiCam = new PhotonCameraWrapper("logiCam", SwerveConstants.logiCamRobotToCam);
     swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig, frontCam, backCam);
     noteHandler = new NoteHandler();
     elevatorSubsystem = new ElevatorSubsystem();
@@ -142,14 +142,16 @@ public class RobotContainer {
       .debounce(2) //check if A is pressed for 2 seconds
       .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.recenter();System.out.println("resetting robot pose");})); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
     shootTrigger.or(()->reverseShootSpeed.get()>0.05).whileTrue(noteHandler.runShooterCommand(()->{return (shootSpeed.get()-reverseShootSpeed.get())*0.75;}));
-    intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.25));
-    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.25));
+    intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.5));
+    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.5));
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
     manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltVelocity(-tiltSpeed.get()*0.1)));
     manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule));
     solenoidTrigger.onTrue(climbSubsystem.extendSolenoidCommand()).onFalse(climbSubsystem.retractSolenoidCommand());
-    liftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->0.25));//.alongWith(climbSubsystem.runRollerCommand(()->-0.1)));
-    reverseLiftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->-0.25));//.alongWith(climbSubsystem.runRollerCommand(()->0.1)));
+    //liftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->0.25));
+    //reverseLiftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->-0.25));
+    liftTrigger.whileTrue(climbSubsystem.runLiftCommand(()->0.25));
+    reverseLiftTrigger.whileTrue(climbSubsystem.runLiftCommand(()->-0.25));
   }
 
   public Command getTeleopCommand() {

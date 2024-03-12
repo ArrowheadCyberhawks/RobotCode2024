@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -20,12 +21,12 @@ public class TurnInPlaceCommand extends PIDCommand {
      */
     public TurnInPlaceCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier targetAngle, double maxVelocity, double maxAcceleration) {
         super(
-            new PIDController(4.5, 0, 0),
+            new PIDController(4.5, 0.1, 1),
             () -> swerveSubsystem.swerveDrive.getOdometryHeading().getRadians(),
             targetAngle,
             (double setpointState) -> {
                 swerveSubsystem.swerveDrive.drive(new Translation2d(),
-                        -swerveSubsystem.swerveDrive.getOdometryHeading().getRadians()+setpointState,true,true);
+                        MathUtil.clamp(-swerveSubsystem.swerveDrive.getOdometryHeading().getRadians()+setpointState, -maxVelocity, maxVelocity),true,true);
             },
             swerveSubsystem
         );
