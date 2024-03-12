@@ -21,9 +21,10 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 2;
-    public static final int kManipulatorControllerPort = 3;
-    public static final int kManipulatorJoystickPort = 4;
+    public static final int kDriverControllerPortUSB = 2;
+    public static final int kDriverControllerPortBT = 4;
+    public static final int kManipulatorControllerPortUSB = 3;
+    public static final int kManipulatorControllerPortBT = 5;
     public static final double kManipulatorJoystickDeadband = 0.05;
     public static final double kDriverControllerDeadband = 0.07;
     public static final double kMaxVelTele = Units.feetToMeters(15);

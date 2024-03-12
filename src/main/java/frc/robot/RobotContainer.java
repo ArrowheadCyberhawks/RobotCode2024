@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.io.File;
+import java.sql.DriverAction;
 import java.util.function.Supplier;
 
 import org.photonvision.PhotonCamera;
@@ -15,6 +16,7 @@ import frc.robot.commands.AutoShootCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -58,7 +60,6 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driverController;
   private final CommandXboxController manipulatorController;
-  private final CommandJoystick manipulatorJoystick;
 
   private final Trigger shootTrigger, intakeTrigger, reverseIntakeTrigger, solenoidTrigger, liftTrigger, reverseLiftTrigger;
   private final Supplier<Double> shootSpeed, reverseShootSpeed, elevatorSpeed, tiltSpeed;
@@ -85,10 +86,17 @@ public class RobotContainer {
     NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
 /** Set controller variables */
-    driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    if (DriverStation.isJoystickConnected(OperatorConstants.kDriverControllerPortUSB) == true) {
+      driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortUSB);
+    } else {
+      driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortBT);
+    }
+    if (DriverStation.isJoystickConnected(OperatorConstants.kManipulatorControllerPortUSB) == true) {
+      manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPortUSB);
+    } else {
+      manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPortBT);
+    }
     climbSubsystem = new ClimbSubsystem();
-    manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPort);
-    manipulatorJoystick = new CommandJoystick(OperatorConstants.kManipulatorJoystickPort);
     teleopCommand = new XboxDriveCommand(driverController,
       swerveSubsystem,
       OperatorConstants.kDriverControllerDeadband,
@@ -96,19 +104,11 @@ public class RobotContainer {
       OperatorConstants.kMaxAccelTele,
       OperatorConstants.kMaxAngularVelTele,
       OperatorConstants.kMaxAngularAccelTele).withInterruptBehavior(InterruptionBehavior.kCancelSelf);
-    if(manipulatorJoystick.getHID().isConnected()) {
-      shootTrigger = manipulatorJoystick.trigger();
-      intakeTrigger = manipulatorJoystick.povUp();
-      reverseIntakeTrigger = manipulatorJoystick.povDown();
-      shootSpeed = manipulatorJoystick::getThrottle;
-      elevatorSpeed = manipulatorJoystick::getX;
-    } else {
-      shootTrigger = manipulatorController.rightTrigger(OperatorConstants.kManipulatorJoystickDeadband);
-      intakeTrigger = manipulatorController.rightBumper();
-      reverseIntakeTrigger = manipulatorController.leftBumper();
-      shootSpeed = manipulatorController::getRightTriggerAxis;
-      elevatorSpeed = manipulatorController::getLeftY;
-    }
+    shootTrigger = manipulatorController.rightTrigger(OperatorConstants.kManipulatorJoystickDeadband);
+    intakeTrigger = manipulatorController.rightBumper();
+    reverseIntakeTrigger = manipulatorController.leftBumper();
+    shootSpeed = manipulatorController::getRightTriggerAxis;
+    elevatorSpeed = manipulatorController::getLeftY;
     reverseShootSpeed = manipulatorController::getLeftTriggerAxis;
     tiltSpeed = manipulatorController::getRightY;
     liftTrigger = manipulatorController.povUp();
