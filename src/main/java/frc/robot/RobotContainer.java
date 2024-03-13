@@ -16,8 +16,11 @@ import frc.robot.commands.AutoShootCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -86,12 +89,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
 /** Set controller variables */
-    if (DriverStation.isJoystickConnected(OperatorConstants.kDriverControllerPortUSB) == true) {
+    if (DriverStation.isJoystickConnected(OperatorConstants.kDriverControllerPortUSB)) {
       driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortUSB);
     } else {
       driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortBT);
     }
-    if (DriverStation.isJoystickConnected(OperatorConstants.kManipulatorControllerPortUSB) == true) {
+    if (DriverStation.isJoystickConnected(OperatorConstants.kManipulatorControllerPortUSB)) {
       manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPortUSB);
     } else {
       manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPortBT);
@@ -99,6 +102,7 @@ public class RobotContainer {
     climbSubsystem = new ClimbSubsystem();
     teleopCommand = new XboxDriveCommand(driverController,
       swerveSubsystem,
+      ()->!driverController.leftStick().getAsBoolean(), //field oriented if left stick is not pressed in
       OperatorConstants.kDriverControllerDeadband,
       OperatorConstants.kMaxVelTele,
       OperatorConstants.kMaxAccelTele,
