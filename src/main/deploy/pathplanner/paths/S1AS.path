@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.999999999999999,
-        "y": 7.0
+        "x": 1.6501707112677895,
+        "y": 6.122848160185632
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.6,
-        "y": 5.55
+        "x": 2.63,
+        "y": 6.19
       },
       "prevControl": {
-        "x": 2.6,
-        "y": 5.55
+        "x": 1.9631179854210998,
+        "y": 6.19
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "shootPos1"
     }
   ],
   "rotationTargets": [],
@@ -39,14 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -163.30075576600638,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": true
 }

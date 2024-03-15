@@ -15,6 +15,6 @@ public class AutoPositionCommand extends SequentialCommandGroup {
      */
     public AutoPositionCommand(double targetElevatorPosition, double targetNoteHandlerTilt, ElevatorSubsystem elevator, NoteHandler noteHandler) {
         new ElevatorTrapezoidCommand(elevator, () -> new TrapezoidProfile.State(targetElevatorPosition, 0));
-        new NoteHandlerTrapezoidCommand(noteHandler , () -> new TrapezoidProfile.State(targetNoteHandlerTilt, 0));
+        noteHandler.setTiltCommand(() -> targetNoteHandlerTilt);
     }
 }

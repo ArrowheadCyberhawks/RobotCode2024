@@ -44,7 +44,7 @@ public final class Constants {
     public static final double kMaxAngularAccelAuto = OperatorConstants.kMaxAngularAccelTele/5;
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(kMaxVelAuto, driveBaseRadius, replanningConfig);
 
-    public static final Transform3d frontCamRobotToCam = new Transform3d(Units.inchesToMeters(15), Units.inchesToMeters(0), Units.inchesToMeters(6.5), new Rotation3d(0,Math.PI/6,0));
+    public static final Transform3d frontCamRobotToCam = new Transform3d(Units.inchesToMeters(14.5), Units.inchesToMeters(0), Units.inchesToMeters(13), new Rotation3d(0, -Units.degreesToRadians(12),0));
     public static final Transform3d backCamRobotToCam = new Transform3d(Units.inchesToMeters(-10), Units.inchesToMeters(-1), Units.inchesToMeters(18), new Rotation3d(0, 0, Math.PI));
     public static final Transform3d logiCamRobotToCam = new Transform3d(); 
   }
