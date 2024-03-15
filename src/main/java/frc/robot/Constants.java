@@ -68,7 +68,7 @@ public final class Constants {
     public static final double kMaxTiltTrapezoidVelocity = 1; // CHANGE FOR REAL ROBOT
     public static final double kMaxTiltTrapezoidAccel = 1; // CHANGE FOR REAL ROBOT
 
-    public static final float kMaxTilt = 9;
+    public static final float kMaxTilt = 19;
     public static final float kMinTilt = -20;
 
     public static final double kShootWheelRadius = Units.inchesToMeters(2);
@@ -82,9 +82,9 @@ public final class Constants {
   }
 
   public static class ClimbConstants {
-    public static final int kLiftMotor1Port = 15;
-    public static final int kLiftMotor2Port = 17;
-    public static final int kRollerMotor1Port = 18;
+    public static final int kLiftMotor1Port = 17;
+    public static final int kLiftMotor2Port = 18;
+    public static final int kRollerMotor1Port = 15;
     public static final int kRollerMotor2Port = 16;
     public static final int kSpinnySolenoid1Port = 0; // CHANGE FOR REAL ROBOT
     public static final int kSpinnySolenoid2Port = 1; // CHANGE FOR REAL ROBOT

@@ -86,15 +86,15 @@ public class RobotContainer {
     NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
 /** Set controller variables */
-    if (DriverStation.isJoystickConnected(OperatorConstants.kDriverControllerPortUSB) == true) {
-      driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortUSB);
-    } else {
+    if (DriverStation.isJoystickConnected(OperatorConstants.kDriverControllerPortBT)) {
       driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortBT);
-    }
-    if (DriverStation.isJoystickConnected(OperatorConstants.kManipulatorControllerPortUSB) == true) {
-      manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPortUSB);
     } else {
+      driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortUSB);
+    }
+    if (DriverStation.isJoystickConnected(OperatorConstants.kManipulatorControllerPortBT)) {
       manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPortBT);
+    } else {
+      manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPortUSB);
     }
     climbSubsystem = new ClimbSubsystem();
     teleopCommand = new XboxDriveCommand(driverController,

@@ -79,7 +79,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
         robotPose = swerveSubsystem.getPose();
         double yaw = Math.atan(targetPose.toPose2d().getTranslation().minus(robotPose.getTranslation()).getY()/targetPose.toPose2d().getTranslation().minus(robotPose.getTranslation()).getX());
         yaw %= Math.PI;
-        System.out.println(yaw);
         return yaw;
     }
 
