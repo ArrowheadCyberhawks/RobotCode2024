@@ -21,7 +21,7 @@ public class TurnInPlaceCommand extends PIDCommand {
      */
     public TurnInPlaceCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier targetAngle, double maxVelocity, double maxAcceleration) {
         super(
-            new PIDController(4.5, 0.1, 0.1),
+            new PIDController(5, 0.0, 0),
             () -> swerveSubsystem.swerveDrive.getOdometryHeading().getRadians(),
             targetAngle,
             (double setpointState) -> {

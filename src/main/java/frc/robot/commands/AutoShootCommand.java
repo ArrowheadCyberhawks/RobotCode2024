@@ -79,14 +79,13 @@ public class AutoShootCommand extends SequentialCommandGroup {
         robotPose = swerveSubsystem.getPose();
         double yaw = Math.atan(targetPose.toPose2d().getTranslation().minus(robotPose.getTranslation()).getY()/targetPose.toPose2d().getTranslation().minus(robotPose.getTranslation()).getX());
         yaw %= Math.PI;
-        System.out.println(yaw);
         return yaw;
     }
 
     private double getPitch() {
         updateTargetTag();
         robotPose = swerveSubsystem.getPose();
-        double v = 31;//noteHandler.getShootSpeed(); TODO: how fast does the notehandler spin????
+        double v = 31;
         double deltaX = targetPose.toPose2d().getTranslation().getDistance(robotPose.getTranslation());
         double deltaY = TARGET_HEIGHT - SHOOTER_HEIGHT;
         double pitch = Math.min(
@@ -94,6 +93,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
                         / (G * deltaX)),
                 Math.atan((v * v + Math.sqrt(v * v * v * v - G * (G * deltaX * deltaX + 2 * deltaY * v * v)))
                         / (G * deltaX))); // don't even try to understand this
-        return pitch;
+        return pitch+0.01;
     }
 }

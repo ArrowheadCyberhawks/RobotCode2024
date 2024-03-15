@@ -32,7 +32,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.HandlerConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PositionalConstants;
 import frc.robot.Constants.SwerveConstants;
 import lib.frc706.cyberlib.commands.XboxDriveCommand;
 
@@ -84,7 +86,7 @@ public class RobotContainer {
     new WaitCommand(2),
     noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
     noteHandler.setShooterCommand(0)));
-    NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
+    NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kAmpElevatorPosition, kAmpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
 /** Set controller variables */
@@ -101,7 +103,7 @@ public class RobotContainer {
     climbSubsystem = new ClimbSubsystem();
     teleopCommand = new XboxDriveCommand(driverController,
       swerveSubsystem,
-      ()->!driverController.leftStick().getAsBoolean(), //field oriented if left stick is not pressed in
+      ()->driverController.leftStick().negate().getAsBoolean(), //field oriented if left stick is not pressed in
       OperatorConstants.kDriverControllerDeadband,
       OperatorConstants.kMaxVelTele,
       OperatorConstants.kMaxAccelTele,
@@ -144,12 +146,17 @@ public class RobotContainer {
       .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.zeroHeading();swerveSubsystem.swerveDrive.synchronizeModuleEncoders();System.out.println("zeroing");})) // reset gyro to 0 degrees when A is pressed
       .debounce(2) //check if A is pressed for 2 seconds
       .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.recenter();System.out.println("resetting robot pose");})); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
-    shootTrigger.or(()->reverseShootSpeed.get()>0.05).whileTrue(noteHandler.runShooterCommand(()->{return (shootSpeed.get()-reverseShootSpeed.get())*0.75;}));
+    shootTrigger.or(()->reverseShootSpeed.get()>0.05).whileTrue(noteHandler.runShooterCommand(()->{return (shootSpeed.get()-reverseShootSpeed.get())*1;}));
     intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.5));
     reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.5));
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
     manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltVelocity(-tiltSpeed.get()*0.1)));
     manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule));
+    manipulatorController.a().whileTrue(new SequentialCommandGroup(
+      noteHandler.setTiltCommand(()->PositionalConstants.kAmpNoteHandlerTilt),
+      noteHandler.setShooterCommand(PositionalConstants.kAmpShooterPower),
+      noteHandler.runIntakeCommand(()->0.5).withTimeout(5),
+      noteHandler.setShooterCommand(0)));
     solenoidTrigger.onTrue(climbSubsystem.extendSolenoidCommand()).onFalse(climbSubsystem.retractSolenoidCommand());
     //liftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->0.25));
     //reverseLiftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->-0.25));
