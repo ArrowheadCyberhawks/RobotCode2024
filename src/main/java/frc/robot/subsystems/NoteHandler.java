@@ -11,6 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HandlerConstants;
 
@@ -45,6 +46,8 @@ public class NoteHandler extends SubsystemBase {
         tiltMotor.setPIDSlot(0);
         tiltMotor.spark.setSoftLimit(SoftLimitDirection.kForward, kMaxTilt);
         tiltMotor.spark.setSoftLimit(SoftLimitDirection.kReverse, kMinTilt);
+        //tiltMotor.setConversionFactors(25*2*Math.PI, 25*2*Math.PI);
+        //tiltMotor.rezero(-3.476);
         shootMotor1.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
         shootMotor2.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
         tiltEncoder = new DutyCycleEncoder(4+1);
@@ -53,6 +56,7 @@ public class NoteHandler extends SubsystemBase {
 
     @Override
     public void periodic() {
+        System.out.println("Tilt angle: " + getTiltPosition());
     }
 
     /**
@@ -176,7 +180,7 @@ public class NoteHandler extends SubsystemBase {
      * @return Command to run the shooter motors at a specified power level.
      */
     public Command runShooterCommand(Supplier<Double> speed) {
-        return this.run(() -> this.setShootMotor(speed.get())).finallyDo(()->setShootMotor(0));
+        return new RunCommand(() -> this.setShootMotor(speed.get())).finallyDo(()->setShootMotor(0));
     }
 
     /**
@@ -185,7 +189,7 @@ public class NoteHandler extends SubsystemBase {
      * @return Command to run the intake motor at a specified power level.
      */
     public Command runIntakeCommand(Supplier<Double> speed) {
-        return this.run(() -> this.setIntakeMotor(speed.get())).finallyDo(()->setIntakeMotor(0));
+        return new RunCommand(() -> this.setIntakeMotor(speed.get())).finallyDo(()->setIntakeMotor(0));
     }
 
     public Command setTiltCommand(Supplier<Double> position) {

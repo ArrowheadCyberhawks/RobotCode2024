@@ -143,13 +143,16 @@ public class RobotContainer {
       .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.zeroHeading();swerveSubsystem.swerveDrive.synchronizeModuleEncoders();System.out.println("zeroing");})) // reset gyro to 0 degrees when A is pressed
       .debounce(2) //check if A is pressed for 2 seconds
       .onTrue(swerveSubsystem.runOnce(() -> {swerveSubsystem.recenter();System.out.println("resetting robot pose");})); // zero heading and reset position to (0,0) if A is pressed for 2 seconds
-    shootTrigger.or(()->reverseShootSpeed.get()>0.05).whileTrue(noteHandler.runShooterCommand(()->{return (shootSpeed.get()-reverseShootSpeed.get())*0.75;}));
+    shootTrigger.or(()->reverseShootSpeed.get()>0.05).whileTrue(noteHandler.runShooterCommand(()->{return (shootSpeed.get()-reverseShootSpeed.get())*1;}));
     intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.5));
     reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.5));
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
-    manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltVelocity(-tiltSpeed.get()*0.1)));
-    manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule));
+    manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(-tiltSpeed.get()*0.1)).finallyDo(()->noteHandler.stopTilt())).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
+    manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule)); 
     manipulatorController.a().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->PositionalConstants.kIntakeElevatorPosition).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kIntakeNoteHandlerTilt)));
+    manipulatorController.x().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->PositionalConstants.kShootElevatorPosition).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kShootNoteHandlerTilt)));
+    // manipulatorController.a().whileTrue(new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler));
+    // manipulatorController.x().whileTrue(new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler));
     solenoidTrigger.onTrue(climbSubsystem.extendSolenoidCommand()).onFalse(climbSubsystem.retractSolenoidCommand());
     //liftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->0.25));
     //reverseLiftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->-0.25));

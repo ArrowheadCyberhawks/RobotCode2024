@@ -1,11 +1,10 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
 
-public class AutoPositionCommand extends SequentialCommandGroup {
+public class AutoPositionCommand extends ParallelCommandGroup {
     /**
      * command to automatically possition the elevator and note handler to a specified position
      * @param targetElevatorPosition the target elevator position

@@ -37,7 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println(elevatorPotentiometer.get());
+        System.out.println("Elevator height: " + getHippoTunesDistance());
     }
 
     /**
@@ -45,6 +45,9 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @param speed Power of the elevator motors, from -1 to 1.
      */
     public void setElevatorMotor(double speed) {
+        if(getHippoTunesDistance()>0.655) {
+            stopElevator();
+        }
         elevatorMotor1.setPower(MathUtil.clamp(-speed, -1, 1)); //TODO: this shouldn't be needed
     }
 

@@ -16,7 +16,7 @@ public class ElevatorPIDCommand extends PIDCommand {
     private final DoubleSupplier setpointSupplier;
 
     public ElevatorPIDCommand(ElevatorSubsystem elevator, DoubleSupplier setpoint) {
-        super(new PIDController(10, 0, 0),
+        super(new PIDController(6, 0, 0),
         elevator::getHippoTunesDistance,
         setpoint,
         elevator::setElevatorMotor,
