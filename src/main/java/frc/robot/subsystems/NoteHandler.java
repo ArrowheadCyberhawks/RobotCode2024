@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkBase.SoftLimitDirection;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HandlerConstants;
@@ -25,6 +26,7 @@ public class NoteHandler extends SubsystemBase {
     private BrushlessSparkWithPID shootMotor1, shootMotor2;
     private BrushlessSparkWithPID tiltMotor;
     private BrushlessSparkWithPID intakeMotor;
+    private DutyCycleEncoder tiltEncoder;
 
     private double desiredTilt;
 
@@ -45,7 +47,12 @@ public class NoteHandler extends SubsystemBase {
         tiltMotor.spark.setSoftLimit(SoftLimitDirection.kReverse, kMinTilt);
         shootMotor1.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
         shootMotor2.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
+        tiltEncoder = new DutyCycleEncoder(4+1);
         setName("NoteHandler");
+    }
+
+    @Override
+    public void periodic() {
     }
 
     /**

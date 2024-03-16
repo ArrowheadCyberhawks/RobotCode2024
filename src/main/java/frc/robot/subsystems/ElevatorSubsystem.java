@@ -7,6 +7,8 @@ import static frc.robot.Constants.PositionalConstants.maxElevatorPosition;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,6 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        System.out.println(elevatorPotentiometer.get());
     }
 
     /**
@@ -42,7 +45,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * @param speed Power of the elevator motors, from -1 to 1.
      */
     public void setElevatorMotor(double speed) {
-        elevatorMotor1.setPower(speed);
+        elevatorMotor1.setPower(MathUtil.clamp(-speed, -1, 1)); //TODO: this shouldn't be needed
     }
 
     /**
@@ -88,7 +91,7 @@ public class ElevatorSubsystem extends SubsystemBase {
      * Gets the distance of the analog potentiometer connected to the notehandler.
      * @return distance of the analog potentiometer in meters.
      */
-    private double getHippoTunesDistance() {
+    public double getHippoTunesDistance() {
         return elevatorPotentiometer.get();
     }
 

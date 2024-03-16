@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.commands.AutoPositionCommand;
 import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.ElevatorPIDCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
@@ -30,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PositionalConstants;
 import frc.robot.Constants.SwerveConstants;
 import lib.frc706.cyberlib.commands.XboxDriveCommand;
 
@@ -108,7 +110,7 @@ public class RobotContainer {
     intakeTrigger = manipulatorController.rightBumper();
     reverseIntakeTrigger = manipulatorController.leftBumper();
     shootSpeed = manipulatorController::getRightTriggerAxis;
-    elevatorSpeed = manipulatorController::getLeftY;
+    elevatorSpeed = ()->-manipulatorController.getLeftY();
     reverseShootSpeed = manipulatorController::getLeftTriggerAxis;
     tiltSpeed = manipulatorController::getRightY;
     liftTrigger = manipulatorController.povUp();
@@ -147,11 +149,12 @@ public class RobotContainer {
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
     manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltVelocity(-tiltSpeed.get()*0.1)));
     manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule));
+    manipulatorController.a().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->PositionalConstants.kIntakeElevatorPosition).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kIntakeNoteHandlerTilt)));
     solenoidTrigger.onTrue(climbSubsystem.extendSolenoidCommand()).onFalse(climbSubsystem.retractSolenoidCommand());
     //liftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->0.25));
     //reverseLiftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->-0.25));
-    liftTrigger.whileTrue(climbSubsystem.runLiftCommand(()->0.25));
-    reverseLiftTrigger.whileTrue(climbSubsystem.runLiftCommand(()->-0.25));
+    liftTrigger.whileTrue(climbSubsystem.runLiftCommand(()->0.5));
+    reverseLiftTrigger.whileTrue(climbSubsystem.runLiftCommand(()->-0.5));
   }
 
   public Command getTeleopCommand() {
