@@ -79,11 +79,11 @@ public class RobotContainer {
     elevatorSubsystem = new ElevatorSubsystem();
   
     // Register Named Commands for autonomous. Very important for the auto to work.
-    NamedCommands.registerCommand("AutoShootCommand", new SequentialCommandGroup(new AutoShootCommand(swerveSubsystem, noteHandler),
-    noteHandler.setShooterCommand(0.75),
-    new WaitCommand(2),
-    noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
-    noteHandler.setShooterCommand(0)));
+    //NamedCommands.registerCommand("AutoShootCommand", new SequentialCommandGroup(new AutoShootCommand(swerveSubsystem, noteHandler),
+    // noteHandler.setShooterCommand(0.75),
+    // new WaitCommand(2),
+    // noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
+    // noteHandler.setShooterCommand(0)));
     NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
@@ -101,6 +101,7 @@ public class RobotContainer {
     climbSubsystem = new ClimbSubsystem();
     teleopCommand = new XboxDriveCommand(driverController,
       swerveSubsystem,
+      ()->true,
       OperatorConstants.kDriverControllerDeadband,
       OperatorConstants.kMaxVelTele,
       OperatorConstants.kMaxAccelTele,
