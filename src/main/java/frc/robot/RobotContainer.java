@@ -7,12 +7,14 @@ package frc.robot;
 import java.io.File;
 import java.sql.DriverAction;
 import java.util.function.Supplier;
+import java.util.function.DoubleSupplier;
 
 import org.photonvision.PhotonCamera;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import frc.robot.commands.AutoPositionCommand;
 import frc.robot.commands.AutoShootCommand;
+import frc.robot.commands.ElevatorPIDCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
@@ -86,19 +88,18 @@ public class RobotContainer {
     new WaitCommand(2),
     noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
     noteHandler.setShooterCommand(0)));
-    NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kAmpElevatorPosition, kAmpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
     NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
 /** Set controller variables */
-    if (DriverStation.isJoystickConnected(OperatorConstants.kDriverControllerPortUSB)) {
-      driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortUSB);
-    } else {
+    if (DriverStation.isJoystickConnected(OperatorConstants.kDriverControllerPortBT)) {
       driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortBT);
-    }
-    if (DriverStation.isJoystickConnected(OperatorConstants.kManipulatorControllerPortUSB)) {
-      manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPortUSB);
     } else {
+      driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortUSB);
+    }
+    if (DriverStation.isJoystickConnected(OperatorConstants.kManipulatorControllerPortBT)) {
       manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPortBT);
+    } else {
+      manipulatorController = new CommandXboxController(OperatorConstants.kManipulatorControllerPortUSB);
     }
     climbSubsystem = new ClimbSubsystem();
     teleopCommand = new XboxDriveCommand(driverController,
@@ -113,7 +114,7 @@ public class RobotContainer {
     intakeTrigger = manipulatorController.rightBumper();
     reverseIntakeTrigger = manipulatorController.leftBumper();
     shootSpeed = manipulatorController::getRightTriggerAxis;
-    elevatorSpeed = manipulatorController::getLeftY;
+    elevatorSpeed = ()->-manipulatorController.getLeftY();
     reverseShootSpeed = manipulatorController::getLeftTriggerAxis;
     tiltSpeed = manipulatorController::getRightY;
     liftTrigger = manipulatorController.povUp();
@@ -150,18 +151,19 @@ public class RobotContainer {
     intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.5));
     reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.5));
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
-    manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltVelocity(-tiltSpeed.get()*0.1)));
-    manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule));
+    manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(-tiltSpeed.get()*0.1)).finallyDo(()->noteHandler.stopTilt())).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
+    manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule)); 
+    manipulatorController.x().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->{return PositionalConstants.kShootElevatorPosition;}).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kShootNoteHandlerTilt)));
+    // manipulatorController.a().whileTrue(new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler));
+    // manipulatorController.x().whileTrue(new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler));
     manipulatorController.a().whileTrue(new SequentialCommandGroup(
-      noteHandler.setTiltCommand(()->PositionalConstants.kAmpNoteHandlerTilt),
-      noteHandler.setShooterCommand(PositionalConstants.kAmpShooterPower),
-      noteHandler.runIntakeCommand(()->0.5).withTimeout(5),
-      noteHandler.setShooterCommand(0)));
+      noteHandler.setTiltCommand(()->PositionalConstants.kIntakeNoteHandlerTilt),
+      noteHandler.runIntakeCommand(()->0.5).withTimeout(5)));
     solenoidTrigger.onTrue(climbSubsystem.extendSolenoidCommand()).onFalse(climbSubsystem.retractSolenoidCommand());
     //liftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->0.25));
     //reverseLiftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->-0.25));
-    liftTrigger.whileTrue(climbSubsystem.runLiftCommand(()->0.25));
-    reverseLiftTrigger.whileTrue(climbSubsystem.runLiftCommand(()->-0.25));
+    liftTrigger.whileTrue(climbSubsystem.runLiftCommand(()->0.5));
+    reverseLiftTrigger.whileTrue(climbSubsystem.runLiftCommand(()->-0.5));
   }
 
   public Command getTeleopCommand() {

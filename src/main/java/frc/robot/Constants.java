@@ -82,20 +82,19 @@ public final class Constants {
   }
 
   public static class ClimbConstants {
-    public static final int kLiftMotor1Port = 15;
-    public static final int kLiftMotor2Port = 17;
-    public static final int kRollerMotor1Port = 18;
+    public static final int kLiftMotor1Port = 17;
+    public static final int kLiftMotor2Port = 18;
+    public static final int kRollerMotor1Port = 15;
     public static final int kRollerMotor2Port = 16;
     public static final int kSpinnySolenoid1Port = 0; // CHANGE FOR REAL ROBOT
     public static final int kSpinnySolenoid2Port = 1; // CHANGE FOR REAL ROBOT
   }
 
   public static class PositionalConstants {
-    public static final double kAmpElevatorPosition = 15; // CHANGE FOR REAL ROBOT
-    public static final double kAmpNoteHandlerTilt = 3; // CHANGE FOR REAL ROBOT
-    public static final double kAmpShooterPower = 0.2;
-    public static final double kIntakeElevatorPosition = 0; // CHANGE FOR REAL ROBOT
-    public static final double kIntakeNoteHandlerTilt = 0; // CHANGE FOR REAL ROBOT
+    public static final double kShootElevatorPosition = 0.623; // CHANGE FOR REAL ROBOT
+    public static final double kShootNoteHandlerTilt = -5.914; // CHANGE FOR REAL ROBOT
+    public static final double kIntakeElevatorPosition = 0.390; // CHANGE FOR REAL ROBOT
+    public static final double kIntakeNoteHandlerTilt = 0; // CHANGE FOR REAL ROBOT // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpElevatorPosition = 500; // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpNoteHandlerTilt = 500; // CHANGE FOR REAL ROBOT
 
