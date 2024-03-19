@@ -195,4 +195,7 @@ public class NoteHandler extends SubsystemBase {
     public Command setTiltCommand(Supplier<Double> position) {
         return this.runOnce(() -> this.setTiltPosition(position.get()));
     }
+    public Command runIntakeForCommand(double time, Supplier<Double> speed) {
+        return this.runIntakeCommand(speed).withTimeout(time);
+    }
 }

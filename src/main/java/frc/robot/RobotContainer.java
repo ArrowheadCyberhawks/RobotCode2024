@@ -88,9 +88,10 @@ public class RobotContainer {
     new WaitCommand(2),
     noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
     noteHandler.setShooterCommand(0)));
-    NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
-    NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
-/** Set controller variables */
+    NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeNoteHandlerTilt, noteHandler).andThen(noteHandler.runIntakeForCommand(5, ()->0.5))); //TODO:add target elevator position and target note handler tilt
+    NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpNoteHandlerTilt, noteHandler)); //TODO:add target elevator position and target note handler tilt
+    NamedCommands.registerCommand("EnableShooterCommand", noteHandler.setShooterCommand(1));
+    NamedCommands.registerCommand("DisableShooterCommand", noteHandler.setShooterCommand(0));
     if (DriverStation.isJoystickConnected(OperatorConstants.kDriverControllerPortBT)) {
       driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortBT);
     } else {
