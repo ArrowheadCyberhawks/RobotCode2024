@@ -37,7 +37,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println("Elevator height: " + getHippoTunesDistance());
     }
 
     /**

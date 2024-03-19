@@ -93,8 +93,8 @@ public final class Constants {
   public static class PositionalConstants {
     public static final double kShootElevatorPosition = 0.623; // CHANGE FOR REAL ROBOT
     public static final double kShootNoteHandlerTilt = -5.914; // CHANGE FOR REAL ROBOT
-    public static final double kIntakeElevatorPosition = 0.390; // CHANGE FOR REAL ROBOT
-    public static final double kIntakeNoteHandlerTilt = 0; // CHANGE FOR REAL ROBOT
+    public static final double kIntakeElevatorPosition = 2.183; // CHANGE FOR REAL ROBOT
+    public static final double kIntakeNoteHandlerTilt = 2.583; // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpElevatorPosition = 500; // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpNoteHandlerTilt = 500; // CHANGE FOR REAL ROBOT
 

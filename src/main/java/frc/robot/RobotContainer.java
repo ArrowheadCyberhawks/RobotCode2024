@@ -150,7 +150,7 @@ public class RobotContainer {
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
     manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(-tiltSpeed.get()*0.1)).finallyDo(()->noteHandler.stopTilt())).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
     manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule)); 
-    manipulatorController.a().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->PositionalConstants.kIntakeElevatorPosition).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kIntakeNoteHandlerTilt)));
+    manipulatorController.a().whileTrue(noteHandler.setTiltCommand(()->PositionalConstants.kIntakeNoteHandlerTilt));
     manipulatorController.x().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->PositionalConstants.kShootElevatorPosition).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kShootNoteHandlerTilt)));
     // manipulatorController.a().whileTrue(new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler));
     // manipulatorController.x().whileTrue(new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler));

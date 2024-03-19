@@ -46,17 +46,29 @@ public class NoteHandler extends SubsystemBase {
         tiltMotor.setPIDSlot(0);
         tiltMotor.spark.setSoftLimit(SoftLimitDirection.kForward, kMaxTilt);
         tiltMotor.spark.setSoftLimit(SoftLimitDirection.kReverse, kMinTilt);
-        //tiltMotor.setConversionFactors(25*2*Math.PI, 25*2*Math.PI);
-        //tiltMotor.rezero(-3.476);
         shootMotor1.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
         shootMotor2.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
-        tiltEncoder = new DutyCycleEncoder(4+1);
+        // tiltMotor.setConversionFactors(1/125*2*Math.PI, 1/125*2*Math.PI);
+        tiltEncoder = new DutyCycleEncoder(0);
+        tiltEncoder.setDistancePerRotation(-2 * Math.PI);
+        tiltEncoder.setPositionOffset(6.067 / (2 * Math.PI));
+        // tiltMotor.spark.get
+        tiltMotor.rezero(getTiltPosition());
         setName("NoteHandler");
     }
 
     @Override
     public void periodic() {
         System.out.println("Tilt angle: " + getTiltPosition());
+        System.out.println("Motor angle: " + tiltMotor.getPosition());
+    }
+
+    /**
+     * Gets the position of the tilt motor.
+     * @return position of the tilt motor in rotations.
+     */
+    public double getTiltPosition() {
+        return tiltEncoder.getDistance();
     }
 
     /**
@@ -105,6 +117,7 @@ public class NoteHandler extends SubsystemBase {
      */
     public void setTiltPosition(double pos) {
         desiredTilt = MathUtil.clamp(pos, HandlerConstants.kMinTilt, HandlerConstants.kMaxTilt);
+        tiltMotor.spark.getEncoder().setPosition(getTiltPosition());
         tiltMotor.setPos(desiredTilt);
     }
 
@@ -114,14 +127,6 @@ public class NoteHandler extends SubsystemBase {
      */
     public void setTiltVelocity(double velocity) {
         setTiltPosition(desiredTilt + velocity);
-    }
-
-    /**
-     * Gets the position of the tilt motor.
-     * @return position of the tilt motor in rotations per minute.
-     */
-    public double getTiltPosition() {
-        return tiltMotor.getPosition();
     }
 
     /**
