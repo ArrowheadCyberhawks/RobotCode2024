@@ -7,6 +7,7 @@ package frc.robot;
 import java.io.File;
 import java.sql.DriverAction;
 import java.util.function.Supplier;
+import java.util.function.DoubleSupplier;
 
 import org.photonvision.PhotonCamera;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -17,8 +18,11 @@ import frc.robot.commands.ElevatorPIDCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.NoteHandler;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.HandlerConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PositionalConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -54,7 +59,7 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem;
   private final NoteHandler noteHandler;
   private final ElevatorSubsystem elevatorSubsystem;
-  private final PhotonCameraWrapper frontCam, backCam, logiCam;
+  private final PhotonCameraWrapper frontCam, backCam;
 
   private Command teleopCommand;
   private final ClimbSubsystem climbSubsystem;
@@ -70,24 +75,23 @@ public class RobotContainer {
   public RobotContainer() {
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
     PhotonCamera.setVersionCheckEnabled(false);
-    /** Initiallize variables */
+    /** Initialize variables */
     frontCam = new PhotonCameraWrapper("frontCam", SwerveConstants.frontCamRobotToCam);
     backCam = new PhotonCameraWrapper("backCam", SwerveConstants.backCamRobotToCam);
-    logiCam = new PhotonCameraWrapper("logiCam", SwerveConstants.logiCamRobotToCam);
     swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig, frontCam, backCam);
     noteHandler = new NoteHandler();
     elevatorSubsystem = new ElevatorSubsystem();
   
     // Register Named Commands for autonomous. Very important for the auto to work.
-    //NamedCommands.registerCommand("AutoShootCommand", new SequentialCommandGroup(new AutoShootCommand(swerveSubsystem, noteHandler),
-    // noteHandler.setShooterCommand(0.75),
-    // new WaitCommand(2),
-    // noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
-    // noteHandler.setShooterCommand(0)));
-    NamedCommands.registerCommand("AutoAmplifierCommand", new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
-    NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
-    NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpElevatorPosition, kHumanPickUpNoteHandlerTilt, elevatorSubsystem, noteHandler)); //TODO:add target elevator position and target note handler tilt
-/** Set controller variables */
+    NamedCommands.registerCommand("AutoShootCommand", new SequentialCommandGroup(new AutoShootCommand(swerveSubsystem, noteHandler),
+    noteHandler.setShooterCommand(0.75),
+    new WaitCommand(2),
+    noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
+    noteHandler.setShooterCommand(0)));
+    NamedCommands.registerCommand("AutoIntakeCommand", new AutoPositionCommand(kIntakeNoteHandlerTilt, noteHandler).andThen(noteHandler.runIntakeForCommand(5, ()->0.5))); //TODO:add target elevator position and target note handler tilt
+    NamedCommands.registerCommand("AutoSourceCommand", new AutoPositionCommand(kHumanPickUpNoteHandlerTilt, noteHandler)); //TODO:add target elevator position and target note handler tilt
+    NamedCommands.registerCommand("EnableShooterCommand", noteHandler.setShooterCommand(1));
+    NamedCommands.registerCommand("DisableShooterCommand", noteHandler.setShooterCommand(0));
     if (DriverStation.isJoystickConnected(OperatorConstants.kDriverControllerPortBT)) {
       driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortBT);
     } else {
@@ -101,7 +105,7 @@ public class RobotContainer {
     climbSubsystem = new ClimbSubsystem();
     teleopCommand = new XboxDriveCommand(driverController,
       swerveSubsystem,
-      ()->true,
+      ()->driverController.leftStick().negate().getAsBoolean(), //field oriented if left stick is not pressed in
       OperatorConstants.kDriverControllerDeadband,
       OperatorConstants.kMaxVelTele,
       OperatorConstants.kMaxAccelTele,
@@ -150,10 +154,12 @@ public class RobotContainer {
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
     manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(-tiltSpeed.get()*0.1)).finallyDo(()->noteHandler.stopTilt())).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
     manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule)); 
-    manipulatorController.a().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->PositionalConstants.kIntakeElevatorPosition).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kIntakeNoteHandlerTilt)));
-    manipulatorController.x().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->PositionalConstants.kShootElevatorPosition).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kShootNoteHandlerTilt)));
+    manipulatorController.x().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->{return PositionalConstants.kShootElevatorPosition;}).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kShootNoteHandlerTilt)));
     // manipulatorController.a().whileTrue(new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler));
     // manipulatorController.x().whileTrue(new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler));
+    manipulatorController.a().whileTrue(new SequentialCommandGroup(
+      noteHandler.setTiltCommand(()->PositionalConstants.kIntakeNoteHandlerTilt),
+      noteHandler.runIntakeCommand(()->0.5).withTimeout(5)));
     solenoidTrigger.onTrue(climbSubsystem.extendSolenoidCommand()).onFalse(climbSubsystem.retractSolenoidCommand());
     //liftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->0.25));
     //reverseLiftTrigger.whileTrue(climbSubsystem.comboLiftCommand(()->-0.25));

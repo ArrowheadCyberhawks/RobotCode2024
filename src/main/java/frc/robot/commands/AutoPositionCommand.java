@@ -12,8 +12,7 @@ public class AutoPositionCommand extends ParallelCommandGroup {
      * @param elevator the elevator subsystem to use
      * @param noteHandler the note handler subsystem to use
      */
-    public AutoPositionCommand(double targetElevatorPosition, double targetNoteHandlerTilt, ElevatorSubsystem elevator, NoteHandler noteHandler) {
-        new ElevatorPIDCommand(elevator, () -> targetElevatorPosition);
+    public AutoPositionCommand(double targetNoteHandlerTilt, NoteHandler noteHandler) {
         noteHandler.setTiltCommand(()->targetNoteHandlerTilt);
     }
 }

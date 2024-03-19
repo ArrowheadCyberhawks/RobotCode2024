@@ -44,7 +44,7 @@ public final class Constants {
     public static final double kMaxAngularAccelAuto = OperatorConstants.kMaxAngularAccelTele/5;
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(kMaxVelAuto, driveBaseRadius, replanningConfig);
 
-    public static final Transform3d frontCamRobotToCam = new Transform3d(Units.inchesToMeters(15), Units.inchesToMeters(0), Units.inchesToMeters(6.5), new Rotation3d(0,Math.PI/6,0));
+    public static final Transform3d frontCamRobotToCam = new Transform3d(Units.inchesToMeters(14.5), Units.inchesToMeters(0), Units.inchesToMeters(13), new Rotation3d(0, -Units.degreesToRadians(12),0));
     public static final Transform3d backCamRobotToCam = new Transform3d(Units.inchesToMeters(-10), Units.inchesToMeters(-1), Units.inchesToMeters(18), new Rotation3d(0, 0, Math.PI));
     public static final Transform3d logiCamRobotToCam = new Transform3d(); 
   }
@@ -68,7 +68,7 @@ public final class Constants {
     public static final double kMaxTiltTrapezoidVelocity = 1; // CHANGE FOR REAL ROBOT
     public static final double kMaxTiltTrapezoidAccel = 1; // CHANGE FOR REAL ROBOT
 
-    public static final float kMaxTilt = 19;
+    public static final float kMaxTilt = 20;
     public static final float kMinTilt = -20;
 
     public static final double kShootWheelRadius = Units.inchesToMeters(2);
@@ -94,7 +94,7 @@ public final class Constants {
     public static final double kShootElevatorPosition = 0.623; // CHANGE FOR REAL ROBOT
     public static final double kShootNoteHandlerTilt = -5.914; // CHANGE FOR REAL ROBOT
     public static final double kIntakeElevatorPosition = 0.390; // CHANGE FOR REAL ROBOT
-    public static final double kIntakeNoteHandlerTilt = 0; // CHANGE FOR REAL ROBOT
+    public static final double kIntakeNoteHandlerTilt = 0; // CHANGE FOR REAL ROBOT // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpElevatorPosition = 500; // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpNoteHandlerTilt = 500; // CHANGE FOR REAL ROBOT
 
