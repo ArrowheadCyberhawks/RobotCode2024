@@ -1,22 +1,10 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.38,
-      "y": 5.55
-    },
-    "rotation": 180.0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoShootCommand"
-          }
-        },
         {
           "type": "parallel",
           "data": {
@@ -24,13 +12,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "S2.1ASC"
+                  "pathName": "S1.1ASNC"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoIntakeCommand"
+                  "name": "EnableShooterCommand"
                 }
               }
             ]
@@ -40,6 +28,18 @@
           "type": "named",
           "data": {
             "name": "AutoShootCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DisableShooterCommand"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "S1.2ASNC"
           }
         }
       ]

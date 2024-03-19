@@ -14,19 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "S3ASPart1C"
+            "pathName": "S3.1ASNC"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "AutoShootCommand"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "S3ASPart2"
           }
         }
       ]
