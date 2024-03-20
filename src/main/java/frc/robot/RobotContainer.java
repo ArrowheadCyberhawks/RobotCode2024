@@ -54,7 +54,7 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem;
   private final NoteHandler noteHandler;
   private final ElevatorSubsystem elevatorSubsystem;
-  private final PhotonCameraWrapper frontCam, backCam, logiCam;
+  private final PhotonCameraWrapper frontCam, backCam;
 
   private Command teleopCommand;
   private final ClimbSubsystem climbSubsystem;
@@ -73,7 +73,6 @@ public class RobotContainer {
     /** Initiallize variables */
     frontCam = new PhotonCameraWrapper("frontCam", SwerveConstants.frontCamRobotToCam);
     backCam = new PhotonCameraWrapper("backCam", SwerveConstants.backCamRobotToCam);
-    logiCam = new PhotonCameraWrapper("logiCam", SwerveConstants.logiCamRobotToCam);
     swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig, frontCam, backCam);
     noteHandler = new NoteHandler();
     elevatorSubsystem = new ElevatorSubsystem();

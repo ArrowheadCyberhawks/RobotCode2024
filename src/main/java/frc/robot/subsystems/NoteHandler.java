@@ -51,16 +51,20 @@ public class NoteHandler extends SubsystemBase {
         // tiltMotor.setConversionFactors(1/125*2*Math.PI, 1/125*2*Math.PI);
         tiltEncoder = new DutyCycleEncoder(0);
         tiltEncoder.setDistancePerRotation(-2 * Math.PI);
-        tiltEncoder.setPositionOffset(6.067 / (2 * Math.PI));
-        // tiltMotor.spark.get
-        tiltMotor.rezero(getTiltPosition());
+        // tiltEncoder.setPositionOffset(6.067 / (2 * Math.PI));
+        tiltEncoder.setPositionOffset(0.9697);
+        // tiltEncoder.reset();
+        tiltMotor.spark.getEncoder().setPositionConversionFactor(2*Math.PI/25);
+        tiltMotor.spark.getEncoder().setPosition(tiltEncoder.getDistance());
         setName("NoteHandler");
     }
 
     @Override
     public void periodic() {
+        tiltMotor.encoder.setPosition(getTiltPosition());
         System.out.println("Tilt angle: " + getTiltPosition());
         System.out.println("Motor angle: " + tiltMotor.getPosition());
+        // System.out.println(tiltEncoder.getPositionOffset());
     }
 
     /**
@@ -117,7 +121,7 @@ public class NoteHandler extends SubsystemBase {
      */
     public void setTiltPosition(double pos) {
         desiredTilt = MathUtil.clamp(pos, HandlerConstants.kMinTilt, HandlerConstants.kMaxTilt);
-        tiltMotor.spark.getEncoder().setPosition(getTiltPosition());
+        tiltMotor.encoder.setPosition(getTiltPosition());
         tiltMotor.setPos(desiredTilt);
     }
 

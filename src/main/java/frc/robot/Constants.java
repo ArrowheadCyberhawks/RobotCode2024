@@ -46,7 +46,6 @@ public final class Constants {
 
     public static final Transform3d frontCamRobotToCam = new Transform3d(Units.inchesToMeters(15), Units.inchesToMeters(0), Units.inchesToMeters(6.5), new Rotation3d(0,Math.PI/6,0));
     public static final Transform3d backCamRobotToCam = new Transform3d(Units.inchesToMeters(-10), Units.inchesToMeters(-1), Units.inchesToMeters(18), new Rotation3d(0, 0, Math.PI));
-    public static final Transform3d logiCamRobotToCam = new Transform3d(); 
   }
 
   public static class HandlerConstants {
@@ -94,7 +93,7 @@ public final class Constants {
     public static final double kShootElevatorPosition = 0.623; // CHANGE FOR REAL ROBOT
     public static final double kShootNoteHandlerTilt = -5.914; // CHANGE FOR REAL ROBOT
     public static final double kIntakeElevatorPosition = 2.183; // CHANGE FOR REAL ROBOT
-    public static final double kIntakeNoteHandlerTilt = 2.583; // CHANGE FOR REAL ROBOT
+    public static final double kIntakeNoteHandlerTilt = 2.2; // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpElevatorPosition = 500; // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpNoteHandlerTilt = 500; // CHANGE FOR REAL ROBOT
 
