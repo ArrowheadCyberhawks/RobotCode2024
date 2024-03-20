@@ -54,7 +54,7 @@ public class RobotContainer {
   private final SwerveSubsystem swerveSubsystem;
   private final NoteHandler noteHandler;
   private final ElevatorSubsystem elevatorSubsystem;
-  private final PhotonCameraWrapper frontCam, backCam, logiCam;
+  private final PhotonCameraWrapper frontCam, backCam;
 
   private Command teleopCommand;
   private final ClimbSubsystem climbSubsystem;
@@ -73,7 +73,6 @@ public class RobotContainer {
     /** Initiallize variables */
     frontCam = new PhotonCameraWrapper("frontCam", SwerveConstants.frontCamRobotToCam);
     backCam = new PhotonCameraWrapper("backCam", SwerveConstants.backCamRobotToCam);
-    logiCam = new PhotonCameraWrapper("logiCam", SwerveConstants.logiCamRobotToCam);
     swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele, SwerveConstants.pathFollowerConfig, frontCam, backCam);
     noteHandler = new NoteHandler();
     elevatorSubsystem = new ElevatorSubsystem();
@@ -148,9 +147,9 @@ public class RobotContainer {
     intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.5));
     reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.5));
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
-    manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(-tiltSpeed.get()*0.1)).finallyDo(()->noteHandler.stopTilt())).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
+    manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(-tiltSpeed.get()*0.25)).finallyDo(()->noteHandler.stopTilt())).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
     manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule)); 
-    manipulatorController.a().whileTrue(noteHandler.setTiltCommand(()->PositionalConstants.kIntakeNoteHandlerTilt));
+    manipulatorController.a().onTrue(noteHandler.setTiltCommand(()->PositionalConstants.kIntakeNoteHandlerTilt));
     manipulatorController.x().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->PositionalConstants.kShootElevatorPosition).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kShootNoteHandlerTilt)));
     // manipulatorController.a().whileTrue(new AutoPositionCommand(kIntakeElevatorPosition, kIntakeNoteHandlerTilt, elevatorSubsystem, noteHandler));
     // manipulatorController.x().whileTrue(new AutoPositionCommand(kShootElevatorPosition, kShootNoteHandlerTilt, elevatorSubsystem, noteHandler));
