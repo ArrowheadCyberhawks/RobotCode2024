@@ -61,6 +61,7 @@ public class NoteHandler extends SubsystemBase {
         tiltMotor.encoder.setPosition(getTiltPosition());
         System.out.println("Tilt angle: " + getTiltPosition());
         System.out.println("Motor angle: " + tiltMotor.getPosition());
+        // System.out.println(tiltEncoder.getPositionOffset());
     }
 
     /**
