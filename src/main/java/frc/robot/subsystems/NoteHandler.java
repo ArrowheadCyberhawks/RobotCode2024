@@ -59,8 +59,10 @@ public class NoteHandler extends SubsystemBase {
     @Override
     public void periodic() {
         tiltMotor.encoder.setPosition(getTiltPosition());
-        System.out.println("Tilt angle: " + getTiltPosition());
-        System.out.println("Motor angle: " + tiltMotor.getPosition());
+        // System.out.println("Tilt angle: " + getTiltPosition());
+        // System.out.println("Tilt angle: " + tiltEncoder.getDistance());
+        // System.out.println("Shooter speed: " + shootMotor1.getRawOutput());
+        // System.out.println("Motor angle: " + tiltMotor.getPosition());
         // System.out.println(tiltEncoder.getPositionOffset());
     }
 
@@ -69,7 +71,11 @@ public class NoteHandler extends SubsystemBase {
      * @return position of the tilt motor in rotations.
      */
     public double getTiltPosition() {
-        return tiltEncoder.getDistance();
+        double distance = tiltEncoder.getDistance();
+        if(distance>Math.PI)
+            return distance-2*Math.PI;//%(2*Math.PI);
+        else
+            return distance;
     }
 
     /**
@@ -124,7 +130,7 @@ public class NoteHandler extends SubsystemBase {
 
     /**
      * Sets the velocity of the tilt motor.
-     * @param velocity Velocity of the tilt motor in rotations per minute.
+     * @param velocity Velocity of the tilt motor in whatevers per whatever; this just adds to the desired position.
      */
     public void setTiltVelocity(double velocity) {
         setTiltPosition(desiredTilt + velocity);

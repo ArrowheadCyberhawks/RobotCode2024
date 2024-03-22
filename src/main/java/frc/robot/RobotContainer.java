@@ -147,7 +147,7 @@ public class RobotContainer {
     intakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->0.5));
     reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(()->-0.5));
     manipulatorController.leftStick().whileTrue(elevatorSubsystem.runElevatorCommand(elevatorSpeed));
-    manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltMotor(-tiltSpeed.get()*0.25)).finallyDo(()->noteHandler.stopTilt())).onFalse(new InstantCommand(()->noteHandler.stopTilt()));
+    manipulatorController.rightStick().whileTrue(new RunCommand(() -> noteHandler.setTiltVelocity(-tiltSpeed.get()*0.05)));//.onFalse(new InstantCommand(()->noteHandler.stopTilt()));
     manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler)).onFalse(new InstantCommand(teleopCommand::schedule)); 
     manipulatorController.a().onTrue(noteHandler.setTiltCommand(()->PositionalConstants.kIntakeNoteHandlerTilt));
     manipulatorController.x().whileTrue(new ElevatorPIDCommand(elevatorSubsystem, ()->PositionalConstants.kShootElevatorPosition).alongWith(noteHandler.setTiltCommand(()->PositionalConstants.kShootNoteHandlerTilt)));

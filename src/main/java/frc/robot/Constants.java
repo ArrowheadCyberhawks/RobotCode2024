@@ -40,11 +40,11 @@ public final class Constants {
     
     public static final double kMaxVelAuto = OperatorConstants.kMaxVelTele/10;
     public static final double kMaxAccelAuto = OperatorConstants.kMaxAccelTele/10;
-    public static final double kMaxAngularVelAuto = OperatorConstants.kMaxAngularVelTele/5;
+    public static final double  kMaxAngularVelAuto = OperatorConstants.kMaxAngularVelTele/5;
     public static final double kMaxAngularAccelAuto = OperatorConstants.kMaxAngularAccelTele/5;
     public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(kMaxVelAuto, driveBaseRadius, replanningConfig);
 
-    public static final Transform3d frontCamRobotToCam = new Transform3d(Units.inchesToMeters(15), Units.inchesToMeters(0), Units.inchesToMeters(6.5), new Rotation3d(0,Math.PI/6,0));
+    public static final Transform3d frontCamRobotToCam = new Transform3d(Units.inchesToMeters(15), Units.inchesToMeters(0), Units.inchesToMeters(6.5), new Rotation3d(Math.PI,Math.PI/6,0));
     public static final Transform3d backCamRobotToCam = new Transform3d(Units.inchesToMeters(-10), Units.inchesToMeters(-1), Units.inchesToMeters(18), new Rotation3d(0, 0, Math.PI));
   }
 
@@ -67,8 +67,8 @@ public final class Constants {
     public static final double kMaxTiltTrapezoidVelocity = 1; // CHANGE FOR REAL ROBOT
     public static final double kMaxTiltTrapezoidAccel = 1; // CHANGE FOR REAL ROBOT
 
-    public static final float kMaxTilt = 19;
-    public static final float kMinTilt = -20;
+    public static final float kMaxTilt = 2.2f;
+    public static final float kMinTilt = -0.5f;
 
     public static final double kShootWheelRadius = Units.inchesToMeters(2);
   }

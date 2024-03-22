@@ -85,7 +85,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
     private double getPitch() {
         updateTargetTag();
         robotPose = swerveSubsystem.getPose();
-        double v = 31;//noteHandler.getShootSpeed(); TODO: how fast does the notehandler spin????
+        double v = 21;//noteHandler.getShootSpeed(); TODO: how fast does the notehandler spin????
         double deltaX = targetPose.toPose2d().getTranslation().getDistance(robotPose.getTranslation());
         double deltaY = TARGET_HEIGHT - SHOOTER_HEIGHT;
         double pitch = Math.min(
@@ -93,6 +93,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
                         / (G * deltaX)),
                 Math.atan((v * v + Math.sqrt(v * v * v * v - G * (G * deltaX * deltaX + 2 * deltaY * v * v)))
                         / (G * deltaX))); // don't even try to understand this
+        System.out.println("PITCH!!: " + pitch);
         return pitch;
     }
 }
