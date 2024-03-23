@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.HandlerConstants;
+import frc.robot.Constants.PositionalConstants;
 
 /**
  * public class to control note handler.
@@ -41,7 +42,8 @@ public class NoteHandler extends SubsystemBase {
         shootMotor2 = new BrushlessSparkWithPID(kShootMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         intakeMotor = new BrushlessSparkWithPID(kIntakeMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO550_MAXRPM, 10000, 1.0);
         shootMotor2.spark.follow(shootMotor1.spark, false); 
-        centerMotor.spark.follow(intakeMotor.spark, true);
+        //centerMotor.spark.follow(intakeMotor.spark, true);
+        centerMotor.spark.setInverted(true);
         tiltMotor = new BrushlessSparkWithPID(kTiltMotorPort);
         tiltMotor.setPIDSlot(0);
         tiltMotor.spark.setSoftLimit(SoftLimitDirection.kForward, kMaxTilt);
@@ -53,16 +55,16 @@ public class NoteHandler extends SubsystemBase {
         tiltEncoder.setPositionOffset(0.9697);
         tiltMotor.spark.getEncoder().setPositionConversionFactor(2*Math.PI/25);
         tiltMotor.spark.getEncoder().setPosition(tiltEncoder.getDistance());
+        tiltMotor.spark.enableVoltageCompensation(12.5);
         setName("NoteHandler");
     }
 
     @Override
     public void periodic() {
         tiltMotor.encoder.setPosition(getTiltPosition());
-        // System.out.println("Tilt angle: " + getTiltPosition());
-        // System.out.println("Tilt angle: " + tiltEncoder.getDistance());
-        // System.out.println("Shooter speed: " + shootMotor1.getRawOutput());
-        // System.out.println("Motor angle: " + tiltMotor.getPosition());
+        System.out.println("Tilt angle: " + getTiltPosition());
+        System.out.println("Shooter speed: " + shootMotor1.getRawOutput());
+        System.out.println("Motor angle: " + tiltMotor.getPosition());
         // System.out.println(tiltEncoder.getPositionOffset());
     }
 
@@ -83,7 +85,11 @@ public class NoteHandler extends SubsystemBase {
      * @param speed Power of the intake motor, from -1 to 1.
      */
     public void setIntakeMotor(double speed) {
-        intakeMotor.setPower(speed);
+        centerMotor.setPower(speed*0.75);
+        if(MathUtil.isNear(PositionalConstants.kIntakeNoteHandlerTilt, getTiltPosition(), 0.2))
+            intakeMotor.setPower(speed);
+        else
+            intakeMotor.spark.stopMotor();
     }
     
     /**
@@ -92,6 +98,7 @@ public class NoteHandler extends SubsystemBase {
      */
     public void setIntakeVelocity(double velocity) {
         intakeMotor.setVel(velocity); 
+        centerMotor.setVel(velocity*0.75);
     }
 
     /**

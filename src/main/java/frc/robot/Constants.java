@@ -67,7 +67,7 @@ public final class Constants {
     public static final double kMaxTiltTrapezoidVelocity = 1; // CHANGE FOR REAL ROBOT
     public static final double kMaxTiltTrapezoidAccel = 1; // CHANGE FOR REAL ROBOT
 
-    public static final float kMaxTilt = 2.2f;
+    public static final float kMaxTilt = 2.4f;
     public static final float kMinTilt = -0.5f;
 
     public static final double kShootWheelRadius = Units.inchesToMeters(2);
@@ -93,7 +93,7 @@ public final class Constants {
     public static final double kShootElevatorPosition = 0.623; // CHANGE FOR REAL ROBOT
     public static final double kShootNoteHandlerTilt = -5.914; // CHANGE FOR REAL ROBOT
     public static final double kIntakeElevatorPosition = 2.183; // CHANGE FOR REAL ROBOT
-    public static final double kIntakeNoteHandlerTilt = 2.2; // CHANGE FOR REAL ROBOT
+    public static final double kIntakeNoteHandlerTilt = 2.4; // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpElevatorPosition = 500; // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpNoteHandlerTilt = 500; // CHANGE FOR REAL ROBOT
 

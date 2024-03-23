@@ -3,6 +3,9 @@ package frc.robot.commands;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -67,7 +70,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
         } else {
             targetTag = RED_SPEAKER_TAG; // driver station broke so we just give up
         }
-        targetPose = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetTag).orElseThrow();
+        targetPose = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetTag).orElseThrow().transformBy(new Transform3d(new Translation3d(0,0,0), new Rotation3d()));
     }
 
     /**
@@ -85,7 +88,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
     private double getPitch() {
         updateTargetTag();
         robotPose = swerveSubsystem.getPose();
-        double v = 21;//noteHandler.getShootSpeed(); TODO: how fast does the notehandler spin????
+        double v = 29;//noteHandler.getShootSpeed(); TODO: how fast does the notehandler spin????
         double deltaX = targetPose.toPose2d().getTranslation().getDistance(robotPose.getTranslation());
         double deltaY = TARGET_HEIGHT - SHOOTER_HEIGHT;
         double pitch = Math.min(
@@ -94,6 +97,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
                 Math.atan((v * v + Math.sqrt(v * v * v * v - G * (G * deltaX * deltaX + 2 * deltaY * v * v)))
                         / (G * deltaX))); // don't even try to understand this
         System.out.println("PITCH!!: " + pitch);
-        return pitch;
+        return pitch + 0.08;
     }
 }
