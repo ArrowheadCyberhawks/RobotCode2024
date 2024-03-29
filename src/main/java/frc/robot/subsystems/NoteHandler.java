@@ -85,7 +85,7 @@ public class NoteHandler extends SubsystemBase {
      * @param speed Power of the intake motor, from -1 to 1.
      */
     public void setIntakeMotor(double speed) {
-        centerMotor.setPower(speed*0.75);
+        centerMotor.setPower(speed*-0.75);
         if(MathUtil.isNear(PositionalConstants.kIntakeNoteHandlerTilt, getTiltPosition(), 0.2))
             intakeMotor.setPower(speed);
         else
