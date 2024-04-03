@@ -36,7 +36,6 @@ public class NoteHandler extends SubsystemBase {
      * initializes motors.
      */
     public NoteHandler() {
-        desiredTilt = 0;
         centerMotor = new BrushlessSparkWithPID(kCenterMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor1 = new BrushlessSparkWithPID(kShootMotor1Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         shootMotor2 = new BrushlessSparkWithPID(kShootMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
@@ -52,7 +51,7 @@ public class NoteHandler extends SubsystemBase {
         shootMotor2.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
         tiltEncoder = new DutyCycleEncoder(0);
         tiltEncoder.setDistancePerRotation(-2 * Math.PI);
-        tiltEncoder.setPositionOffset(0.9697);
+        tiltEncoder.setPositionOffset(0.2820);
         tiltMotor.spark.getEncoder().setPositionConversionFactor(2*Math.PI/25);
         tiltMotor.spark.getEncoder().setPosition(tiltEncoder.getDistance());
         tiltMotor.spark.enableVoltageCompensation(12.5);
@@ -62,10 +61,10 @@ public class NoteHandler extends SubsystemBase {
     @Override
     public void periodic() {
         tiltMotor.encoder.setPosition(getTiltPosition());
-        System.out.println("Tilt angle: " + getTiltPosition());
-        System.out.println("Shooter speed: " + shootMotor1.getRawOutput());
-        System.out.println("Motor angle: " + tiltMotor.getPosition());
-        // System.out.println(tiltEncoder.getPositionOffset());
+        // System.out.println("Tilt angle: " + getTiltPosition());
+        // System.out.println("Shooter speed: " + shootMotor1.getRawOutput());
+        // System.out.println("Motor angle: " + tiltMotor.getPosition());
+        // System.out.println(tiltEncoder.getAbsolutePosition());
     }
 
     /**
@@ -75,7 +74,9 @@ public class NoteHandler extends SubsystemBase {
     public double getTiltPosition() {
         double distance = tiltEncoder.getDistance();
         if(distance>Math.PI)
-            return distance-2*Math.PI;//%(2*Math.PI);
+            return distance - 2 * Math.PI;//%(2*Math.PI);
+        else if (distance < -Math.PI)
+            return distance + 2 * Math.PI;
         else
             return distance;
     }
@@ -85,11 +86,13 @@ public class NoteHandler extends SubsystemBase {
      * @param speed Power of the intake motor, from -1 to 1.
      */
     public void setIntakeMotor(double speed) {
-        centerMotor.setPower(speed*-0.75);
-        if(MathUtil.isNear(PositionalConstants.kIntakeNoteHandlerTilt, getTiltPosition(), 0.2))
+        if(MathUtil.isNear(PositionalConstants.kIntakeNoteHandlerTilt, getTiltPosition(), 0.2)){
+            centerMotor.setPower(speed*-0.75);
             intakeMotor.setPower(speed);
-        else
+        } else {
+            centerMotor.setPower(speed*-0.25);
             intakeMotor.spark.stopMotor();
+        }
     }
     
     /**

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -46,6 +47,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
             targetTag = RED_SPEAKER_TAG; // driver station broke so we just give up
         }
         addRequirements(noteHandler, swerve); // no one else can use the note handler right now
+        AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().setOrigin(OriginPosition.kRedAllianceWallRightSide);
         targetPose = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetTag).orElseThrow(); // figure out where the tag is
         addCommands(// setup our command sequence
                 //noteHandler.setShooterCommand(1.0), //start the shooter
