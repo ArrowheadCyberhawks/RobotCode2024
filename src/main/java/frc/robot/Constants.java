@@ -73,32 +73,14 @@ public final class Constants {
     public static final double kShootWheelRadius = Units.inchesToMeters(2);
   }
 
-  public static class ElevatorConstants {
-    public static final int kElevatorMotor1Port = 13;
-
-    public static final double kMaxElevatorTrapezoidVelocity = 1000; // CHANGE FOR REAL ROBOT
-    public static final double kMaxElevatorTrapezoidAccel = 1000; // CHANGE FOR REAL ROBOT
-  }
-
   public static class ClimbConstants {
     public static final int kLiftMotor1Port = 17;
     public static final int kLiftMotor2Port = 18;
-    public static final int kRollerMotor1Port = 15;
-    public static final int kRollerMotor2Port = 16;
-    public static final int kSpinnySolenoid1Port = 0; // CHANGE FOR REAL ROBOT
-    public static final int kSpinnySolenoid2Port = 1; // CHANGE FOR REAL ROBOT
   }
 
   public static class PositionalConstants {
-    public static final double kShootElevatorPosition = 0.623; // CHANGE FOR REAL ROBOT
     public static final double kShootNoteHandlerTilt = -5.914; // CHANGE FOR REAL ROBOT
-    public static final double kIntakeElevatorPosition = 2.183; // CHANGE FOR REAL ROBOT
     public static final double kIntakeNoteHandlerTilt = HandlerConstants.kMaxTilt; // CHANGE FOR REAL ROBOT
-    public static final double kHumanPickUpElevatorPosition = 500; // CHANGE FOR REAL ROBOT
-    public static final double kHumanPickUpNoteHandlerTilt = 500; // CHANGE FOR REAL ROBOT
-
-    public static final double groundToElevatorAngle = 50; // CHANGE FOR REAL ROBOT
-    public static final double chassisBottomToFloor = Units.inchesToMeters(5.75); // CHANGE FOR REAL ROBOT
-    public static final double maxElevatorPosition = 1; // CHANGE FOR REAL ROBOT
+    public static final double kHumanPickUpNoteHandlerTilt = 0; // CHANGE FOR REAL ROBOT
   }
 }

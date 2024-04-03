@@ -84,7 +84,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
         robotPose = swerveSubsystem.getPose();
         double yaw = Math.atan(targetPose.toPose2d().getTranslation().minus(robotPose.getTranslation()).getY()/targetPose.toPose2d().getTranslation().minus(robotPose.getTranslation()).getX());
         yaw %= Math.PI;
-        return yaw;
+        return yaw+0.01;
     }
 
     private double getPitch() {
@@ -99,6 +99,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
                 Math.atan((v * v + Math.sqrt(v * v * v * v - G * (G * deltaX * deltaX + 2 * deltaY * v * v)))
                         / (G * deltaX))); // don't even try to understand this
         System.out.println("PITCH!!: " + pitch);
-        return pitch + 0.08;
+        return pitch + 0.1;
     }
 }

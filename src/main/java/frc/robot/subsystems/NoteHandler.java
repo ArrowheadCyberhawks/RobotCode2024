@@ -41,8 +41,7 @@ public class NoteHandler extends SubsystemBase {
         shootMotor2 = new BrushlessSparkWithPID(kShootMotor2Port, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO1650_MAXRPM, 5000, 1.0);
         intakeMotor = new BrushlessSparkWithPID(kIntakeMotorPort, 1.0, 0.0, 0.0, 1.0, 0.0, BrushlessSparkWithPID.NEO550_MAXRPM, 10000, 1.0);
         shootMotor2.spark.follow(shootMotor1.spark, false); 
-        //centerMotor.spark.follow(intakeMotor.spark, true);
-        centerMotor.spark.setInverted(true);
+        // centerMotor.spark.setInverted(false);
         tiltMotor = new BrushlessSparkWithPID(kTiltMotorPort);
         tiltMotor.setPIDSlot(0);
         tiltMotor.spark.setSoftLimit(SoftLimitDirection.kForward, kMaxTilt);
@@ -87,11 +86,11 @@ public class NoteHandler extends SubsystemBase {
      */
     public void setIntakeMotor(double speed) {
         if(MathUtil.isNear(PositionalConstants.kIntakeNoteHandlerTilt, getTiltPosition(), 0.2)){
-            centerMotor.setPower(speed*-0.75);
-            intakeMotor.setPower(speed);
+            centerMotor.setPower(speed*0.75);
+            intakeMotor.setPower(speed); // only run the intake motor if we're tilted to the right position
         } else {
-            centerMotor.setPower(speed*-0.25);
-            intakeMotor.spark.stopMotor();
+            centerMotor.setPower(speed*0.25); // run center motor slower to stop accidental shooting
+            intakeMotor.spark.stopMotor(); // stop intake motor from intaking into the robot
         }
     }
     
