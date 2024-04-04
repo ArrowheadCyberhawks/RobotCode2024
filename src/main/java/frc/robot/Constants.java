@@ -79,7 +79,7 @@ public final class Constants {
   }
 
   public static class PositionalConstants {
-    public static final double kShootNoteHandlerTilt = -5.914; // CHANGE FOR REAL ROBOT
+    public static final double kShootNoteHandlerTilt = 0.969; // CHANGE FOR REAL ROBOT
     public static final double kIntakeNoteHandlerTilt = HandlerConstants.kMaxTilt; // CHANGE FOR REAL ROBOT
     public static final double kHumanPickUpNoteHandlerTilt = 0; // CHANGE FOR REAL ROBOT
   }

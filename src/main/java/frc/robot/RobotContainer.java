@@ -156,7 +156,7 @@ public class RobotContainer {
     intakeTrigger.or(driverController.rightBumper()).whileTrue(noteHandler.runIntakeCommand(() -> 0.5));
     reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(() -> -0.5));
     manipulatorController.rightStick()
-        .whileTrue(new RunCommand(() -> noteHandler.setTiltVelocity(-tiltSpeed.get() * 0.05)));
+        .whileTrue(new RunCommand(() -> noteHandler.setTiltVelocity(-tiltSpeed.get() * 0.04)));
     manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler))
         .onFalse(new InstantCommand(teleopCommand::schedule));
     manipulatorController.a().onTrue(noteHandler.setTiltCommand(() -> PositionalConstants.kIntakeNoteHandlerTilt));

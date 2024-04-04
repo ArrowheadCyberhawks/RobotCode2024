@@ -60,9 +60,9 @@ public class NoteHandler extends SubsystemBase {
     @Override
     public void periodic() {
         tiltMotor.encoder.setPosition(getTiltPosition());
-        // System.out.println("Tilt angle: " + getTiltPosition());
-        // System.out.println("Shooter speed: " + shootMotor1.getRawOutput());
-        // System.out.println("Motor angle: " + tiltMotor.getPosition());
+        System.out.println("Tilt angle: " + getTiltPosition());
+        System.out.println("Shooter speed: " + shootMotor1.getRawOutput());
+        System.out.println("Motor angle: " + tiltMotor.getPosition());
         // System.out.println(tiltEncoder.getAbsolutePosition());
     }
 

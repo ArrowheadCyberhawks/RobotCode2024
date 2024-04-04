@@ -47,14 +47,14 @@ public class AutoShootCommand extends SequentialCommandGroup {
             targetTag = RED_SPEAKER_TAG; // driver station broke so we just give up
         }
         addRequirements(noteHandler, swerve); // no one else can use the note handler right now
-        AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().setOrigin(OriginPosition.kRedAllianceWallRightSide);
+        // AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().setOrigin(OriginPosition.kRedAllianceWallRightSide);
         targetPose = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField().getTagPose(targetTag).orElseThrow(); // figure out where the tag is
         addCommands(// setup our command sequence
                 //noteHandler.setShooterCommand(1.0), //start the shooter
                 new ParallelCommandGroup(
-                        new TurnInPlaceCommand(swerve, this::getAngleToSpeaker, // turn to face the speaker
-                                Constants.SwerveConstants.kMaxAngularVelAuto,
-                                Constants.SwerveConstants.kMaxAngularAccelAuto).withInterruptBehavior(InterruptionBehavior.kCancelIncoming),
+                        // new TurnInPlaceCommand(swerve, this::getAngleToSpeaker, // turn to face the speaker
+                        //         Constants.SwerveConstants.kMaxAngularVelAuto,
+                        //         Constants.SwerveConstants.kMaxAngularAccelAuto).withInterruptBehavior(InterruptionBehavior.kCancelIncoming),
                         noteHandler.setTiltCommand(this::getPitch)),
                 //noteHandler.runIntakeCommand(() -> 1.0).withTimeout(1), // run the intake for 1 second
                 noteHandler.setShooterCommand(0)); //stop the shooter, TODO: we should probably have a method for this
