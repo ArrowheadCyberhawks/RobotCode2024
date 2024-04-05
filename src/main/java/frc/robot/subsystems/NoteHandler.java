@@ -50,7 +50,7 @@ public class NoteHandler extends SubsystemBase {
         shootMotor2.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
         tiltEncoder = new DutyCycleEncoder(0);
         tiltEncoder.setDistancePerRotation(-2 * Math.PI);
-        tiltEncoder.setPositionOffset(0.2820);
+        tiltEncoder.setPositionOffset(0.6128);
         tiltMotor.spark.getEncoder().setPositionConversionFactor(2*Math.PI/25);
         tiltMotor.spark.getEncoder().setPosition(tiltEncoder.getDistance());
         tiltMotor.spark.enableVoltageCompensation(12.5);

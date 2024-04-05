@@ -80,11 +80,10 @@ public class RobotContainer {
     noteHandler.setTiltCommand(()->kShootNoteHandlerTilt),//new AutoShootCommand(swerveSubsystem, noteHandler),
     noteHandler.setShooterCommand(1),
     new WaitCommand(2),
-    noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
+    noteHandler.runIntakeCommand(()->0.25).withTimeout(1.5),
     noteHandler.setShooterCommand(0)));
     NamedCommands.registerCommand("AutoAmplifierCommand", noteHandler.setTiltCommand(() -> kShootNoteHandlerTilt));
     NamedCommands.registerCommand("AutoIntakeCommand", noteHandler.setTiltCommand(() -> kIntakeNoteHandlerTilt));
-    NamedCommands.registerCommand("AutoSourceCommand", noteHandler.setTiltCommand(() -> kHumanPickUpNoteHandlerTilt));
     /** Set controller variables */
     if (DriverStation.isJoystickConnected(OperatorConstants.kDriverControllerPortBT)) {
       driverController = new CommandXboxController(OperatorConstants.kDriverControllerPortBT);
