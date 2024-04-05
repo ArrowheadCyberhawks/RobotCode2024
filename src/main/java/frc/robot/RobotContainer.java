@@ -78,7 +78,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("AutoShootCommand", new
     SequentialCommandGroup(
     noteHandler.setTiltCommand(()->kShootNoteHandlerTilt),//new AutoShootCommand(swerveSubsystem, noteHandler),
-    noteHandler.setShooterCommand(0.75),
+    noteHandler.setShooterCommand(1),
     new WaitCommand(2),
     noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
     noteHandler.setShooterCommand(0)));
@@ -154,14 +154,15 @@ public class RobotContainer {
     shootTrigger.or(() -> reverseShootSpeed.get() > 0.05).whileTrue(noteHandler.runShooterCommand(() -> {
       return (shootSpeed.get() - reverseShootSpeed.get()) * 1;
     }));
-    intakeTrigger.or(driverController.rightBumper()).whileTrue(noteHandler.runIntakeCommand(() -> 0.5));
-    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(() -> -0.5));
+    intakeTrigger.or(driverController.rightBumper()).whileTrue(noteHandler.runIntakeCommand(() -> 1.0));
+    reverseIntakeTrigger.whileTrue(noteHandler.runIntakeCommand(() -> -1.0));
     manipulatorController.rightStick()
         .whileTrue(new RunCommand(() -> noteHandler.setTiltVelocity(-tiltSpeed.get() * 0.04)));
     manipulatorController.b().whileTrue(new AutoShootCommand(swerveSubsystem, noteHandler))
         .onFalse(new InstantCommand(teleopCommand::schedule));
     manipulatorController.a().onTrue(noteHandler.setTiltCommand(() -> PositionalConstants.kIntakeNoteHandlerTilt));
-    manipulatorController.x().whileTrue(noteHandler.setTiltCommand(() -> PositionalConstants.kShootNoteHandlerTilt));
+    manipulatorController.x().onTrue(noteHandler.setTiltCommand(() -> PositionalConstants.kShootNoteHandlerTilt));
+    manipulatorController.y().onTrue(noteHandler.setTiltCommand(()->0.0));
     liftTrigger.whileTrue(climbSubsystem.runLiftCommand(() -> 0.5));
     reverseLiftTrigger.whileTrue(climbSubsystem.runLiftCommand(() -> -0.5));
   }
