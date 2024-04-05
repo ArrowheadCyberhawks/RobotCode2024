@@ -2,25 +2,81 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.0,
-      "y": 7.0
+      "x": 0.7,
+      "y": 6.75
     },
-    "rotation": 0
+    "rotation": -119.37047230413535
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "S1AS"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "S1.1ASC"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "EnableShooterCommand"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "AutoShootCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DisableShooterCommand"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "S1.2AS"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "EnableShooterCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoIntakeCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShootCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DisableShooterCommand"
           }
         }
       ]

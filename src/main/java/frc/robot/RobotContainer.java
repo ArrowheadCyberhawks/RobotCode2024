@@ -6,11 +6,9 @@ package frc.robot;
 
 import java.io.File;
 import java.util.function.Supplier;
-
 import org.photonvision.PhotonCamera;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import frc.robot.commands.AutoPositionCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.NoteHandler;
@@ -20,6 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -67,7 +67,7 @@ public class RobotContainer {
   public RobotContainer() {
     File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
     PhotonCamera.setVersionCheckEnabled(false);
-    /** Initiallize variables */
+    /** Initialize variables */
     frontCam = new PhotonCameraWrapper("frontCam", SwerveConstants.frontCamRobotToCam);
     backCam = new PhotonCameraWrapper("backCam", SwerveConstants.backCamRobotToCam);
     swerveSubsystem = new SwerveSubsystem(swerveJsonDirectory, OperatorConstants.kMaxVelTele,
@@ -75,12 +75,13 @@ public class RobotContainer {
     noteHandler = new NoteHandler();
 
     // Register Named Commands for autonomous. Very important for the auto to work.
-    // NamedCommands.registerCommand("AutoShootCommand", new
-    // SequentialCommandGroup(new AutoShootCommand(swerveSubsystem, noteHandler),
-    // noteHandler.setShooterCommand(0.75),
-    // new WaitCommand(2),
-    // noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
-    // noteHandler.setShooterCommand(0)));
+    NamedCommands.registerCommand("AutoShootCommand", new
+    SequentialCommandGroup(
+    noteHandler.setTiltCommand(()->kShootNoteHandlerTilt),//new AutoShootCommand(swerveSubsystem, noteHandler),
+    noteHandler.setShooterCommand(0.75),
+    new WaitCommand(2),
+    noteHandler.runIntakeCommand(()->0.25).withTimeout(1),
+    noteHandler.setShooterCommand(0)));
     NamedCommands.registerCommand("AutoAmplifierCommand", noteHandler.setTiltCommand(() -> kShootNoteHandlerTilt));
     NamedCommands.registerCommand("AutoIntakeCommand", noteHandler.setTiltCommand(() -> kIntakeNoteHandlerTilt));
     NamedCommands.registerCommand("AutoSourceCommand", noteHandler.setTiltCommand(() -> kHumanPickUpNoteHandlerTilt));
