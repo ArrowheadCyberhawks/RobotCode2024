@@ -79,7 +79,7 @@ public final class Constants {
   }
 
   public static class PositionalConstants {
-    public static final double kShootNoteHandlerTilt = 0.84; //0.969
+    public static final double kShootNoteHandlerTilt = 0.92; //0.969
     public static final double kIntakeNoteHandlerTilt = HandlerConstants.kMaxTilt;
   }
 }
