@@ -50,7 +50,7 @@ public class NoteHandler extends SubsystemBase {
         shootMotor2.setConversionFactors(1, HandlerConstants.kShootWheelRadius);
         tiltEncoder = new DutyCycleEncoder(0);
         tiltEncoder.setDistancePerRotation(-2 * Math.PI);
-        tiltEncoder.setPositionOffset(0.2820);
+        tiltEncoder.setPositionOffset(0.7882);
         tiltMotor.spark.getEncoder().setPositionConversionFactor(2*Math.PI/25);
         tiltMotor.spark.getEncoder().setPosition(tiltEncoder.getDistance());
         tiltMotor.spark.enableVoltageCompensation(12.5);
@@ -61,9 +61,9 @@ public class NoteHandler extends SubsystemBase {
     public void periodic() {
         tiltMotor.encoder.setPosition(getTiltPosition());
         System.out.println("Tilt angle: " + getTiltPosition());
-        System.out.println("Shooter speed: " + shootMotor1.getRawOutput());
+        // System.out.println("Shooter speed: " + shootMotor1.getRawOutput());
         System.out.println("Motor angle: " + tiltMotor.getPosition());
-        // System.out.println(tiltEncoder.getAbsolutePosition());
+        System.out.println(tiltEncoder.getAbsolutePosition());
     }
 
     /**

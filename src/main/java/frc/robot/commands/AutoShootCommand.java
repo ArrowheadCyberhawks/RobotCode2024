@@ -93,6 +93,6 @@ public class AutoShootCommand extends SequentialCommandGroup {
                 Math.atan((v * v + Math.sqrt(v * v * v * v - G * (G * deltaX * deltaX + 2 * deltaY * v * v)))
                         / (G * deltaX))); // don't even try to understand this
         System.out.println("PITCH!!: " + pitch);
-        return pitch + 0.1;
+        return pitch + 0.25;
     }
 }
