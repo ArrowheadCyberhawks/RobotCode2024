@@ -14,19 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "EnableShooterCommand"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "AutoShootCommand"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "DisableShooterCommand"
           }
         },
         {
