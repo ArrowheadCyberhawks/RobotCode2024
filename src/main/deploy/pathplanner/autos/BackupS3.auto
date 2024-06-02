@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7158327706968803,
+      "y": 4.361919607030098
+    },
+    "rotation": 119.87599269168945
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShootCommand"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "S3.1ASNC"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

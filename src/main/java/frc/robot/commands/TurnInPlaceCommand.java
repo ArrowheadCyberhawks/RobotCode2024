@@ -1,31 +1,34 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.TrapezoidProfileCommand;
+
+import java.util.function.DoubleSupplier;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import lib.frc706.cyberlib.subsystems.SwerveSubsystem;
 
-public class TurnInPlaceCommand extends TrapezoidProfileCommand {
-    private double targetAngle;
+public class TurnInPlaceCommand extends PIDCommand {
+    private DoubleSupplier targetAngle;
     private SwerveSubsystem swerveSubsystem;
     /**
      * Turns the robot in place to a specified angle according to a trapezoidal motion profile.
      * @param swerveSubsystem The swerve subsystem to use
      * @param targetAngle The angle in radians to turn to RELATIVE TO THE ROBOT'S CURRENT ANGLE
      * @param maxVelocity The maximum velocity to turn at
-     * @param maxAcceleration The maximum acceleration to turn at
+     * @param maxAcceleration The maximum acceleratio n to turn at
      */
-    public TurnInPlaceCommand(SwerveSubsystem swerveSubsystem, double targetAngle, double maxVelocity, double maxAcceleration) {
+    public TurnInPlaceCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier targetAngle, double maxVelocity, double maxAcceleration) {
         super(
-            new TrapezoidProfile(
-                new Constraints(maxVelocity, maxAcceleration)
-            ),
-            setpointState -> swerveSubsystem.driveRobotRelative(new ChassisSpeeds(0, 0, setpointState.velocity)),
-            () -> new State(targetAngle, 0),
-            () -> new State(swerveSubsystem.getRotation2d().getRadians(), Units.degreesToRadians(swerveSubsystem.getTurnRate())),
+            new PIDController(5, 0, 0),
+            () -> swerveSubsystem.swerveDrive.getOdometryHeading().getRadians(),
+            targetAngle,
+            (double setpointState) -> {
+                swerveSubsystem.swerveDrive.drive(new Translation2d(),
+                        MathUtil.clamp(-swerveSubsystem.swerveDrive.getOdometryHeading().getRadians()+setpointState, -maxVelocity, maxVelocity),true,true);
+                System.out.println("setpoint: " + setpointState);
+            },
             swerveSubsystem
         );
         this.targetAngle = targetAngle;
@@ -34,6 +37,6 @@ public class TurnInPlaceCommand extends TrapezoidProfileCommand {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(swerveSubsystem.getRotation2d().getRadians() - targetAngle) < 0.1 && Math.abs(Units.degreesToRadians(swerveSubsystem.getTurnRate())) < 0.1;
+        return Math.abs(swerveSubsystem.getRotation2d().getRadians() - targetAngle.getAsDouble()) < 0.03 && Math.abs(Units.degreesToRadians(swerveSubsystem.getTurnRate())) < 0.01;
     }
 }
